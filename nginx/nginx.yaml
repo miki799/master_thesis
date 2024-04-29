@@ -1,0 +1,57 @@
+# NodePort for testing only
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: mt-development
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-cm
+  namespace: mt-development
+data:
+  nginx.conf: |
+    server {
+      listen       80;
+      server_name  localhost;
+
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+      }
+    }
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: mt-development
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.25.5
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d
+      ports:
+        - containerPort: 80
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+  volumes:
+    - name: config-volume
+      configMap:
+        name: nginx-cm

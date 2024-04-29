@@ -1,0 +1,3 @@
+# certs and keys
+*.crt
+*.key
