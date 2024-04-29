@@ -9,8 +9,8 @@ spec:
     app: nginx
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 443
+      targetPort: 443
   type: NodePort
 
 ---
@@ -22,8 +22,11 @@ metadata:
 data:
   nginx.conf: |
     server {
-      listen       80;
+      listen       443 ssl;
       server_name  localhost;
+
+      ssl_certificate /etc/secret/nginx.crt;
+      ssl_certificate_key /etc/secret/nginx.key;
 
       location / {
         root   /usr/share/nginx/html;
@@ -45,8 +48,10 @@ spec:
       volumeMounts:
         - name: config-volume
           mountPath: /etc/nginx/conf.d
+        - name: secret-volume
+          mountPath: /etc/secret
       ports:
-        - containerPort: 80
+        - containerPort: 443
       resources:
         limits:
           memory: "128Mi"
@@ -55,3 +60,6 @@ spec:
     - name: config-volume
       configMap:
         name: nginx-cm
+    - name: secret-volume
+      secret:
+        secretName: nginx-secret # Secret object created with kubectl (check /scripts/setup.sh)
