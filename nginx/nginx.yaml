@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-svc
-  namespace: mt-development
+  namespace: dev
 spec:
   selector:
     app: nginx
@@ -18,15 +18,15 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-cm
-  namespace: mt-development
+  namespace: dev
 data:
   nginx.conf: |
     server {
       listen       443 ssl;
       server_name  localhost;
 
-      ssl_certificate /etc/secret/nginx.crt;
-      ssl_certificate_key /etc/secret/nginx.key;
+      ssl_certificate /etc/secret/tls.crt;
+      ssl_certificate_key /etc/secret/tls.key;
 
       location / {
         root   /usr/share/nginx/html;
@@ -38,7 +38,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nginx
-  namespace: mt-development
+  namespace: dev
   labels:
     app: nginx
 spec:
