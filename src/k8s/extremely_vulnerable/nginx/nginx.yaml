@@ -1,4 +1,3 @@
-# NodePort for testing only
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,10 +8,9 @@ spec:
     app: nginx
   ports:
     - protocol: TCP
-      port: 443
-      targetPort: 443
-  type: NodePort
-
+      port: 80
+      targetPort: 80
+  type: ClusterIP # accessible only on cluster internal ip
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -22,11 +20,8 @@ metadata:
 data:
   nginx.conf: |
     server {
-      listen       443 ssl;
+      listen       80;
       server_name  localhost;
-
-      ssl_certificate /etc/secret/tls.crt;
-      ssl_certificate_key /etc/secret/tls.key;
 
       location / {
         root   /usr/share/nginx/html;
@@ -48,10 +43,8 @@ spec:
       volumeMounts:
         - name: config-volume
           mountPath: /etc/nginx/conf.d
-        - name: secret-volume
-          mountPath: /etc/secret
       ports:
-        - containerPort: 443
+        - containerPort: 80
       resources:
         limits:
           memory: "128Mi"
@@ -60,6 +53,3 @@ spec:
     - name: config-volume
       configMap:
         name: nginx-cm
-    - name: secret-volume
-      secret:
-        secretName: nginx-secret # Secret object created with kubectl (check /scripts/setup.sh)

@@ -8,6 +8,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: sec-monitor
+  name: security
   labels:
-    name: sec-monitor
+    name: security

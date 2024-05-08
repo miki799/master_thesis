@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vuln-app-svc
+  namespace: dev
+spec:
+  selector:
+    app: vuln-app
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP # accessible only on cluster internal ip
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vuln-app
+  namespace: dev
+  labels:
+    app: vuln-app
+spec:
+  securityContext:
+    # Due to PodSecurity admission controller running those have to be set
+    runAsUser: 999
+    fsGroup: 999
+  containers:
+    - name: vuln-app
+      image: vuln_app:1.0
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      ports:
+        - containerPort: 5000

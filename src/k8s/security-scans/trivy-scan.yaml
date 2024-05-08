@@ -1,0 +1,58 @@
+# On AKS cluster I will have to check if I can mount docker.sock from host (worker node)
+# there is also possibilty (maybe it will work...)
+
+# Create Docker Credentials: Generate Docker credentials for your ACR. You can do this using the Azure CLI or Azure portal. These credentials include the ACR login server URL, username, and password or a Docker token.
+# Use Docker Login: Use the Docker CLI (docker login) or Docker login credentials helpers to authenticate with ACR from within your AKS cluster. This step stores the authentication token securely on the AKS nodes.
+# Pull Images from ACR: Once authenticated, you can pull container images from ACR using docker pull or another container runtime's mechanism (e.g., kubectl create deployment).
+# Run Trivy: With the container images pulled from ACR, you can run Trivy within your Kubernetes pod to scan the images for vulnerabilities.
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: trivy-scan-nginx
+  namespace: security
+spec:
+  template:
+    spec:
+      containers:
+        - name: trivy
+          image: aquasec/trivy:latest
+          args:
+            - "image"
+            - "nginx-dev"
+            - "--cache-dir"
+            - "/tmp/trivy-cache"
+            - "nginx:dev"
+      restartPolicy: Never
+      # volumes:
+      #   - name: docker-socket
+      #     hostPath:
+      #       path: /var/run/docker.sock
+      #   - name: containerd-socket
+      #     hostPath:
+      #       path: /run/containerd/containerd.sock
+  backoffLimit: 3
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: trivy-scan-alpine
+  namespace: security
+spec:
+  template:
+    spec:
+      containers:
+        - name: trivy
+          image: aquasec/trivy:latest
+          args:
+            - "image"
+            - "alpine:dev"
+      restartPolicy: Never
+      # volumes:
+      #   - name: docker-socket
+      #     hostPath:
+      #       path: /var/run/docker.sock
+      #   - name: containerd-socket
+      #     hostPath:
+      #       path: /run/containerd/containerd.sock
+  backoffLimit: 3

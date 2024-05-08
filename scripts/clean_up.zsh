@@ -1,11 +1,13 @@
 #!/bin/zsh
 
+K8S_DIR="$(git rev-parse --show-toplevel)/src/k8s"
+
 #1 Delete namespaces with resources
 
 echo "Deleting namespaces..."
 
 kubectl delete ns dev
-kubectl delete ns sec-monitor
+kubectl delete ns security
 
 echo "Namespaces deleted!"
 
@@ -13,7 +15,7 @@ echo "Namespaces deleted!"
 
 echo "Deleting certs and keys..."
 
-rm -f /nginx/nginx.crt
-rm -f /nginx/nginx.key
+rm -f $K8S_DIR/nginx/nginx.crt
+rm -f $K8S_DIR/nginx/nginx.key
 
 echo "Certs and keys deleted!"
