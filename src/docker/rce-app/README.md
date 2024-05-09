@@ -10,10 +10,9 @@ App exposes HTTP endpoint `/execute` which allows executing commands on the cont
 
 `docker build -t safe_app:1.0 .`
 
-#### Run
+#### Deploy
 
-K8s:
-
+`kubectl create ns dev`
 `kubectl apply -f rce_app.pod.yaml`
 
 #### Test

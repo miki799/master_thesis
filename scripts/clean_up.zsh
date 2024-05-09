@@ -2,7 +2,7 @@
 
 K8S_DIR="$(git rev-parse --show-toplevel)/src/k8s"
 
-#1 Delete namespaces with resources
+## 1 Delete namespaces with resources
 
 echo "Deleting namespaces..."
 
@@ -11,7 +11,7 @@ kubectl delete ns security
 
 echo "Namespaces deleted!"
 
-#2 Delete certs and keys
+## 2 Delete certs and keys
 
 echo "Deleting certs and keys..."
 
