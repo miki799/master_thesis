@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-K8S_DIR="$(git rev-parse --show-toplevel)/src/k8s"
+source scripts/variables.zsh
 
 ## 1 Create namespaces
 
@@ -19,7 +19,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $K8S_DIR/nginx/nginx
 
 kubectl create secret tls nginx-secret -n dev --key=$K8S_DIR/nginx/nginx.key --cert=$K8S_DIR/nginx/nginx.crt
 
-## 3 Deploy nginx-svc service (NodePort), nginx-cm (ConfigMap) and nginx (Pod)
+## 3 Deploy nginx-svc (ClusterIP, ConfigMap and Pod)
 
 kubectl apply -f $K8S_DIR/nginx/nginx.yaml
 
@@ -27,7 +27,7 @@ kubectl apply -f $K8S_DIR/nginx/nginx.yaml
 
 kubectl apply -f $K8S_DIR/alpine-dev/alpine-dev.yaml
 
-## 5 Deploy vulnerable app
+## 5 Deploy vulnerable app (ClusterIP, Pod)
 
 kubectl apply -f $K8S_DIR/rce-app/rce-app.yaml
 

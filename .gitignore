@@ -1,3 +1,9 @@
 # Certificates and private keys
 *.crt
 *.key
+
+# Logs
+logs
+
+# Azure scripts
+scripts/azure

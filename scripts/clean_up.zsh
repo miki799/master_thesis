@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-K8S_DIR="$(git rev-parse --show-toplevel)/src/k8s"
+source scripts/variables.zsh
 
 ## 1 Delete namespaces with resources
 
