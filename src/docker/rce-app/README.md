@@ -8,7 +8,7 @@ App exposes HTTP endpoint `/execute` which allows executing commands on the cont
 
 #### Build docker image (run inside the rce_app directory)
 
-`docker build -t safe_app:1.0 .`
+`docker build -t vuln_app:1.0 .`
 
 #### Deploy
 
