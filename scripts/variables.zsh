@@ -10,6 +10,10 @@ CP_NODE_NAME=$CLUSTER_NAME-control-plane
 
 # Docker
 DOCKER_DIR="$ROOT_DIR/src/docker"
+NGINX="nginx:dev"
+ALPINE_DEV="alpine:dev"
+VULN_APP="vuln_app:1.0"
+ALPINE_SEC="alpine:security"
 
 # Kubernetes
 K8S_DIR="$ROOT_DIR/src/k8s"
