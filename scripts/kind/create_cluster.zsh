@@ -36,3 +36,11 @@ docker exec $CP_NODE_NAME sh -c 'curl -LO https://github.com/aquasecurity/kube-b
 docker exec $WORKER_NODE_NAME sh -c 'curl -LO https://github.com/aquasecurity/kube-bench/releases/download/v0.7.3/kube-bench_0.7.3_linux_arm64.tar.gz && mkdir -p /etc/kube-bench && tar -xvf kube-bench_0.7.3_linux_arm64.tar.gz -C /etc/kube-bench && mv /etc/kube-bench/kube-bench /usr/local/bin'
 
 echo "kube-bench installed!"
+
+# Create namespaces
+
+kubectl apply -f $K8S_DIR/namespaces.yaml
+
+# Deploy Falco
+
+source scripts/k8s/deploy_falco.zsh

@@ -11,11 +11,11 @@
 #### Docker
 `alias build_images="./scripts/build_images.zsh"`
 `alias delete_images="./scripts/delete_images.zsh"`
-`alias scan_images="./scripts/docker/scan_images.zsh"`
+`alias trivy_images_scan="./scripts/docker/trivy_images_scan.zsh"`
 
 #### Kubernetes
 `alias deploy_app="./scripts/deploy.zsh"`
 `alias deploy_vuln_app="./scripts/deploy_extremely_vulnerable.zsh"`
 `alias clean_up="./scripts/clean_up.zsh"`
-`alias scan_cluster="./scripts/k8s/scan_cluster.zsh"`
-`alias scan_manifests="./scripts/k8s/scan_manifests.zsh"`
+`alias kubebench_scan="./scripts/k8s/kubebench_scan.zsh"`
+`alias kubesec_scan="./scripts/k8s/kubesec_scan.zsh"`
