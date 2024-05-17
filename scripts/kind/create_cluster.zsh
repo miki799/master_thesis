@@ -12,6 +12,14 @@ kind create cluster --name $CLUSTER_NAME --config $KIND_CONFIG_DIR/$KIND_CONFIG_
 
 kubectl cluster-info --context kind-$CLUSTER_NAME
 
+# Install Calico
+
+echo "Applying Calico CNI..."
+
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml || { echo "Failed to apply Calico manifest! Cluster cannot be created!"; exit 1; }
+
+echo "Calico CNI applied!"
+
 # Load Docker images
 
 echo "Loading Docker images to the kind cluster..."

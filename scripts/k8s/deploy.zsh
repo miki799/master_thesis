@@ -30,3 +30,7 @@ kubectl apply -f $K8S_DIR/rce-app/rce-app.yaml
 ## 5 Deploy alpine-security
 
 # kubectl apply -f $K8S_DIR/alpine-security/alpine-security.yaml
+
+## 5 Deploy NetworkPolicy
+
+kubectl apply -f $K8S_DIR/network-policies/dev-restrict-traffic.yaml

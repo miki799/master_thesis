@@ -42,3 +42,6 @@ nodes:
   #     listenAddress: "0.0.0.0"
   #     protocol: TCP
   - role: worker
+networking:
+  # disables kindnet CNI which doesn't support NetworkPolicies
+  disableDefaultCNI: true

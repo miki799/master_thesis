@@ -1,7 +1,6 @@
 #!/bin/zsh
 
 source scripts/variables.zsh
-source scripts/kind/export_logs.zsh
 
 echo "Deleting cluster $CLUSTER_NAME ..."
 

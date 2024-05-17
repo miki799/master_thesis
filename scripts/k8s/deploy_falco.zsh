@@ -4,6 +4,8 @@ source scripts/variables.zsh
 
 # Deploy Falco (currently only for syscalls)
 
+echo "Deploying falco!"
+
 if helm repo list | grep -q 'falcosecurity'; then
   echo "falcosecurity repository already added"
 else
@@ -22,3 +24,5 @@ helm install falco falcosecurity/falco \
 
     #  Currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
     #  --values=https://raw.githubusercontent.com/falcosecurity/charts/master/charts/falco/values-syscall-k8saudit.yaml
+
+echo "Falco deployed!

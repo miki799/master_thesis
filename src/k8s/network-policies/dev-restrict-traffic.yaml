@@ -1,0 +1,63 @@
+# Kubernetes Network Policies follow a "deny by default" model.
+# So what is not specified here will by denied (e.g. from inside Pods we cannot send requests to the API server)
+
+# Following NetworkPolicy concerns dev namespace and allows:
+# alpine-dev -> nginx
+# alpine-dev -> vuln-app
+# every-pod-in-dev-namespace -> k8s dns service in kube-system namespace
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: restrict-traffic
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # ingress traffic from pod with label=alpine-dev is allowed on port 443 (nginx ClusterIP service port)
+    - from:
+        - podSelector:
+            matchLabels:
+              app: alpine-dev
+      ports:
+        - protocol: TCP
+          port: 443
+    # ingress traffic from pod with label=alpine-dev is allowed on port 5000 (vuln_app ClusterIP service port)
+    - from:
+        - podSelector:
+            matchLabels:
+              app: alpine-dev
+      ports:
+        - protocol: TCP
+          port: 5000
+  egress:
+    # egress traffic to the pod with label=nginx is allowed on port 443 (nginx ClusterIP service port)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - protocol: TCP
+          port: 443
+    # egress traffic to the pod with label=vuln-app is allowed on port 5000 (vuln-app ClusterIP service port)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vuln-app
+      ports:
+        - protocol: TCP
+          port: 5000
+    # allows communication with k8s DNS service
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
