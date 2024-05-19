@@ -15,7 +15,7 @@ docker cp $CP_NODE_NAME:/kube-bench $LOGS_DIR
 # # kube-bench with job
 
 # echo "Running kube-bench job..."
-# kubectl apply -f $K8S_DIR/security-scan/kube-bench.yaml
+# kubectl apply -f $K8S_SEC_DIR/security-scan/kube-bench.yaml
 
 # echo "Waiting for kube-bench job to complete..."
 # kubectl wait --for=condition=complete --timeout=15s job/kube-bench -n security

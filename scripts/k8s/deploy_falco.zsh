@@ -25,4 +25,4 @@ helm install falco falcosecurity/falco \
     #  Currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
     #  --values=https://raw.githubusercontent.com/falcosecurity/charts/master/charts/falco/values-syscall-k8saudit.yaml
 
-echo "Falco deployed!
+echo "Falco deployed!"

@@ -14,8 +14,8 @@
 `alias trivy_images_scan="./scripts/docker/trivy_images_scan.zsh"`
 
 #### Kubernetes
-`alias deploy_app="./scripts/deploy.zsh"`
-`alias deploy_vuln_app="./scripts/deploy_extremely_vulnerable.zsh"`
+`alias deploy_app="./scripts/deploy_app.zsh"`
+`alias deploy_vuln_app="./scripts/deploy_vuln_app.zsh"`
 `alias clean_up="./scripts/clean_up.zsh"`
 `alias kubebench_scan="./scripts/k8s/kubebench_scan.zsh"`
 `alias kubesec_scan="./scripts/k8s/kubesec_scan.zsh"`

@@ -9,5 +9,6 @@ logs/*
 scripts/azure
 
 # TODO.md
-
 TODO.md
+
+.vscode

@@ -8,6 +8,8 @@
 
 - [Helm](https://helm.sh/) - package manager for k8s
 
+- [Calico](https://github.com/projectcalico/calico) - CNI plugin
+
 - [Trivy](https://github.com/aquasecurity/trivy) - for images vulnerabilites scanning
 
 - [kubesec](https://kubesec.io/) - for manifests static analysis

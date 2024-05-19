@@ -15,7 +15,7 @@ echo "Namespaces deleted!"
 
 echo "Deleting certs and keys..."
 
-rm -f $K8S_DIR/nginx/nginx.crt
-rm -f $K8S_DIR/nginx/nginx.key
+rm -f $K8S_SEC_DIR/nginx/nginx.crt
+rm -f $K8S_SEC_DIR/nginx/nginx.key
 
 echo "Certs and keys deleted!"
