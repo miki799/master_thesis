@@ -1,6 +1,7 @@
 # Certificates and private keys
 *.crt
 *.key
+*.csr
 
 # Logs
 logs/*

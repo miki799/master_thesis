@@ -10,9 +10,11 @@ plugins:
         # policy violations will cause the pod to be rejected
         enforce: "baseline"
         enforce-version: "latest"
-        # p
+        # Policy violations will trigger the addition of an audit annotation
+        # to the event recorded in the audit log, but are otherwise allowed.
         audit: "restricted"
         audit-version: "latest"
+        # Policy violations will trigger a user-facing warning, but are otherwise allowed.
         warn: "restricted"
         warn-version: "latest"
       exemptions:
