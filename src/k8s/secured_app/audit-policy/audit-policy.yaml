@@ -3,20 +3,80 @@ kind: Policy
 # Don't generate audit events for all requests in RequestReceived stage.
 omitStages:
   - "RequestReceived"
+  - "ResponseStarted"
+  - "Panic"
 rules:
   # Log pod changes at RequestResponse level
   - level: RequestResponse
+    verbs: ["get", "create", "update", "patch", "delete"]
     resources:
-      - group: ""
+      - group: "" # core API group
         # Resource "pods" doesn't match requests to any subresource of pods (like /status or /log),
         # which is consistent with the typical RBAC policy.
         resources: ["pods"]
+    namespaces: ["security", "dev"]
 
   # Only check access to resource "pods"
   # - level: Metadata
   #   resources:
   #     - group: ""
   #       resources: ["pods/log", "pods/status"]
+
+  # Log configmap and secret changes at the Metadata level.
+  - level: Metadata
+    verbs: ["get", "create", "update", "patch", "delete"]
+    resources:
+      - group: ""
+        resources: ["secrets", "configmaps"]
+    namespaces: ["security", "dev"]
+
+  # Log role and rolebinding changes at RequestResponse level
+  - level: RequestResponse
+    verbs: ["get", "create", "update", "patch", "delete"]
+    resources:
+      - group: "rbac.authorization.k8s.io"
+        resources:
+          ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
+        namespaces: ["security", "dev"]
+
+  # Log serviceaccount changes at RequestResponse level
+  - level: RequestResponse
+    verbs: ["get", "create", "update", "patch", "delete"]
+    resources:
+      - group: ""
+        resources: ["serviceaccounts"]
+        namespaces: ["security", "dev"]
+
+  # Log NetworkPolicy changes at RequestResponse level
+  - level: RequestResponse
+    verbs: ["get", "create", "update", "patch", "delete"]
+    resources:
+      - group: "networking.k8s.io"
+        resources: ["networkpolicies"]
+        namespaces: ["security", "dev"]
+
+  # TODO: Add watching actions of user
+
+  # # Log all actions performed by system:admin and other system users
+  # - level: RequestResponse
+  #   users: ["system:admin", "system:serviceaccount:kube-system:default"]
+
+  ### DON'T WATCH RULES
+
+  # Log the request body of configmap changes in kube-system.
+  - level: None
+    resources:
+      - group: "" # core API group
+        resources: ["configmaps"]
+    # This rule only applies to resources in the "kube-system" namespace.
+    # The empty string "" can be used to select non-namespaced resources.
+    namespaces: ["kube-system"]
+
+  # Log node changes at RequestResponse level
+  - level: None
+    resources:
+      - group: ""
+        resources: ["nodes"]
 
   # Don't log watch requests by the "system:kube-proxy" on endpoints or services
   - level: None
@@ -32,57 +92,3 @@ rules:
     nonResourceURLs:
       - "/api*" # Wildcard matching.
       - "/version"
-
-  # Log the request body of configmap changes in kube-system.
-  - level: Request
-    resources:
-      - group: "" # core API group
-        resources: ["configmaps"]
-    # This rule only applies to resources in the "kube-system" namespace.
-    # The empty string "" can be used to select non-namespaced resources.
-    namespaces: ["kube-system"]
-
-  # Log configmap and secret changes in all other namespaces at the Metadata level.
-  - level: Metadata
-    resources:
-      - group: "" # core API group
-        resources: ["secrets", "configmaps"]
-
-  # Log role and rolebinding changes at RequestResponse level
-  - level: RequestResponse
-    resources:
-      - group: "rbac.authorization.k8s.io"
-        resources:
-          ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
-        namespaces: ["security", "dev"]
-
-  # Log serviceaccount changes at RequestResponse level
-  - level: RequestResponse
-    resources:
-      - group: ""
-        resources: ["serviceaccounts"]
-        namespaces: ["security", "dev"]
-
-  # Log NetworkPolicy changes at RequestResponse level
-  - level: RequestResponse
-    resources:
-      - group: "networking.k8s.io"
-        resources: ["networkpolicies"]
-        namespaces: ["security", "dev"]
-
-  # # Log node changes at RequestResponse level
-  # - level: RequestResponse
-  #   resources:
-  #     - group: ""
-  #       resources: ["nodes"]
-
-  # # Log all actions performed by system:admin and other system users
-  # - level: RequestResponse
-  #   users: ["system:admin", "system:serviceaccount:kube-system:default"]
-
-  # A catch-all rule to log all other requests at the Metadata level.
-  - level: Metadata
-    # Long-running requests like watches that fall under this rule will not
-    # generate an audit event in RequestReceived.
-    omitStages:
-      - "RequestReceived"

@@ -12,8 +12,9 @@ nodes:
           extraArgs:
             audit-log-path: /var/log/kubernetes/kube-apiserver-audit.log
             audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
-          # Falco k8s-plugin currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
-          # audit-webhook-config-file: /etc/kubernetes/policies/falco-webhook-config.yaml
+            admission-control-config-file: /etc/kubernetes/pss-config/pss-cluster.yaml
+            # Falco k8s-plugin currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
+            # audit-webhook-config-file: /etc/kubernetes/policies/falco-webhook-config.yaml
           # mount new files / directories on the control plane
           extraVolumes:
             - name: audit-policies
@@ -26,21 +27,24 @@ nodes:
               mountPath: /var/log/kubernetes
               readOnly: false
               pathType: DirectoryOrCreate
+            - name: pss-config
+              hostPath: /etc/kubernetes/pss-config
+              mountPath: /etc/kubernetes/pss-config
+              readOnly: true
+              pathType: DirectoryOrCreate
     # mount the local file on the control plane
     extraMounts:
-      # add proper path
       - hostPath: ./src/k8s/secured_app/audit-policy/audit-policy.yaml
         containerPath: /etc/kubernetes/policies/audit-policy.yaml
         readOnly: true
+      - hostPath: ./src/k8s/secured_app/pod-security-standard/pss-cluster.yaml
+        containerPath: /etc/kubernetes/pss-config/pss-cluster.yaml
+        readOnly: true
+        propagation: None
       # Falco k8s-plugin currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
       # - hostPath: ./src/k8s/secured_app/falco/falco-webhook-config.yaml
       #   containerPath: /etc/kubernetes/policies/falco-webhook-config.yaml
       #   readOnly: true
-  # extraPortMappings:
-  #   - containerPort: 80
-  #     hostPort: 80
-  #     listenAddress: "0.0.0.0"
-  #     protocol: TCP
   - role: worker
 networking:
   # disables kindnet CNI which doesn't support NetworkPolicies
