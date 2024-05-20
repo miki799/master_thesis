@@ -61,6 +61,8 @@ customRules:
       priority: WARNING
       tags: [security, file_access]
 
+    # This rules don't detect interaction with k8s token
+
     # - rule: Detect Find Command Searching for Token files
     #   desc: Detects the use of the find command looking for files with names containing "token"
     #   condition: >

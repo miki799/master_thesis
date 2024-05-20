@@ -2,17 +2,46 @@
 
 source scripts/variables.zsh
 
-echo "Creating cluster from $KIND_CONFIG_DIR/$KIND_CONFIG_NAME"
+SELECTED_CONFIG=$KIND_CONFIG_NAME
+
+display_help() {
+  echo "Usage: $0 [OPTION] [secured | basic]"
+  echo ""
+  echo "This script creates a Kubernetes cluster using kind."
+  echo "Arguments:"
+  echo "basic - creates basic cluster"
+  echo "secured - creates cluster with enabled audit-policies and configured Pod Security Standards"
+  echo "Options:"
+  echo "  -h, --help      Display this help message and exit"
+  echo ""
+}
+
+if [ $# -eq 0 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+  display_help
+  exit 0
+fi
+
+if [ "$1" = "secured" ]; then
+    SELECTED_CONFIG=$KIND_CONFIG_SECURED_NAME
+    echo "Secured cluster will be created!"
+elif [ "$1" = "basic" ]; then
+    echo "Basic cluster will be created!"
+else
+    echo "Incorrect arguments provided!"
+    display_help
+    exit 1
+fi
 
 # Create cluster
 
-kind create cluster --name $CLUSTER_NAME --config $KIND_CONFIG_DIR/$KIND_CONFIG_SECURED_NAME
+echo "Creating cluster from $KIND_CONFIG_DIR/$SELECTED_CONFIG"
+kind create cluster --name $CLUSTER_NAME --config $KIND_CONFIG_DIR/$SELECTED_CONFIG
 
 # Interact with cluster
 
 kubectl cluster-info --context kind-$CLUSTER_NAME
 
-# Install Calico
+# Install Calico (needed for NetworkPolicies, kind Kindnet CNI doesn't support them)
 
 echo "Applying Calico CNI..."
 
