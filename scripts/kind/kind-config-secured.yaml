@@ -42,6 +42,7 @@ nodes:
       - hostPath: ./src/k8s/secured_app/audit-policy/audit-policy.yaml
         containerPath: /etc/kubernetes/policies/audit-policy.yaml
         readOnly: true
+        propagation: None # changes on the host system won't be propagated to the container
       - hostPath: ./src/k8s/secured_app/pod-security-standard/pss-cluster.yaml
         containerPath: /etc/kubernetes/pss-config/pss-cluster.yaml
         readOnly: true

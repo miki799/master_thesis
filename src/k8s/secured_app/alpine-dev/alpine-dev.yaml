@@ -6,6 +6,9 @@ metadata:
   labels:
     app: alpine-dev
 spec:
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
   containers:
     - name: alpine-dev
       image: alpine:dev
@@ -14,7 +17,7 @@ spec:
         [
           "/bin/sh",
           "-c",
-          "while true; do curl --cacert /etc/secret/tls.crt https://nginx-svc.dev.svc.cluster.local:443; sleep 15; done",
+          "while true; do curl --no-buffer --cacert /etc/secret/tls.crt https://nginx-svc.dev.svc.cluster.local:443; sleep 15; done",
         ]
       resources:
         limits:

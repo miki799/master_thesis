@@ -6,6 +6,9 @@ metadata:
   labels:
     app: alpine-security
 spec:
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
   containers:
     - name: alpine-security
       image: alpine:security

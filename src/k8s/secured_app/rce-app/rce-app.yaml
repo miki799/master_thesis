@@ -24,6 +24,8 @@ spec:
     # Due to PodSecurity admission controller running those have to be set
     runAsUser: 999
     fsGroup: 999
+    seccompProfile:
+      type: RuntimeDefault
   containers:
     - name: vuln-app
       image: vuln_app:1.0
