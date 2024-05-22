@@ -3,5 +3,10 @@ kind: EncryptionConfiguration
 resources:
   - resources:
       - secrets
-      - configmaps
+        configmaps
     providers:
+      - aescbc:
+          keys:
+            - name: key
+              secret: 4Jfnct4FZlpocXRXZPfor2jiNB0wKV8c0Fu797g48ZA= # generated with head -c 32 /dev/urandom | base64
+      # - identity: {} # this fallback allows reading unencrypted secrets

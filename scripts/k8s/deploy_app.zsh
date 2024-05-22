@@ -20,7 +20,7 @@ mkdir -p $NGINX_DIR
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $NGINX_DIR/nginx.key -out $NGINX_DIR/nginx.crt \
 -subj "/CN=localhost" -addext "subjectAltName=DNS:nginx-svc.dev.svc.cluster.local"
 
-kubectl create secret tls nginx-secret -n dev --key=$NGINX_DIR/nginx.key --cert=$NGINX_DIR/nginx.crt
+kubectl create secret tls nginx-secret -n $DEV_NAMESPACE --key=$NGINX_DIR/nginx.key --cert=$NGINX_DIR/nginx.crt
 
 ## 3 Deploy nginx-svc (ClusterIP, ConfigMap and Pod)
 
@@ -41,6 +41,12 @@ kubectl apply -f $K8S_SEC_DIR/rce-app/rce-app.yaml
 ## 7 Deploy NetworkPolicy
 
 kubectl apply -f $K8S_SEC_DIR/network-policies/dev-restrict-traffic.yaml
+
+## 8 Configure RBAC
+
+### devs group access control
+
+kubectl apply -f $K8S_SEC_DIR/rbac/devs.yaml
 
 ## 8 Deploy Falco
 

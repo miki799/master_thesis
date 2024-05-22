@@ -10,7 +10,7 @@ display_help() {
   echo "This script creates a Kubernetes cluster using kind."
   echo "Arguments:"
   echo "basic - creates basic cluster"
-  echo "secured - creates cluster with enabled audit-policies and configured Pod Security Standards"
+  echo "secured - creates cluster with enabled audit-policies, configured Pod Security Standards and enabled encryption of data at rest"
   echo "Options:"
   echo "  -h, --help      Display this help message and exit"
   echo ""

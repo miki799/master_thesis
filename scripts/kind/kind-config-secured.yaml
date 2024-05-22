@@ -3,7 +3,6 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
     kubeadmConfigPatches:
-      # enables audit logging
       - |
         apiVersion: kubeadm.k8s.io/v1beta3
         kind: ClusterConfiguration
@@ -13,6 +12,7 @@ nodes:
             audit-log-path: /var/log/kubernetes/kube-apiserver-audit.log
             audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
             admission-control-config-file: /etc/kubernetes/pss-config/pss-cluster.yaml
+            encryption-provider-config: /etc/kubernetes/enc/encryption-configuration.yaml
             # Falco k8s-plugin currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
             # audit-webhook-config-file: /etc/kubernetes/policies/falco-webhook-config.yaml
           # mount new files / directories on the control plane
@@ -32,6 +32,11 @@ nodes:
               mountPath: /etc/kubernetes/pss-config
               readOnly: true
               pathType: DirectoryOrCreate
+            - name: enc-config
+              hostPath: /etc/kubernetes/enc
+              mountPath: /etc/kubernetes/enc
+              readOnly: true
+              pathType: DirectoryOrCreate
     # mount the local file on the control plane
     extraMounts:
       - hostPath: ./src/k8s/secured_app/audit-policy/audit-policy.yaml
@@ -39,6 +44,10 @@ nodes:
         readOnly: true
       - hostPath: ./src/k8s/secured_app/pod-security-standard/pss-cluster.yaml
         containerPath: /etc/kubernetes/pss-config/pss-cluster.yaml
+        readOnly: true
+        propagation: None
+      - hostPath: ./src/k8s/secured_app/api-server/encryption-configuration.yaml
+        containerPath: /etc/kubernetes/enc/encryption-configuration.yaml
         readOnly: true
         propagation: None
       # Falco k8s-plugin currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
