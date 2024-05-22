@@ -3,8 +3,8 @@
 *.key
 *.csr
 
-# Logs
-logs/*
+# Artifacts
+artifacts/*
 
 # Azure scripts
 scripts/azure

@@ -3,6 +3,8 @@
 alias create_cluster="./scripts/kind/create_cluster.zsh"
 alias delete_cluster="./scripts/kind/delete_cluster.zsh"
 alias export_cluster_logs="./scripts/kind/export_cluster_logs.zsh"
+alias export_audit_logs="./scripts/k8s/export_audit_logs.zsh"
+alias create_users="./scripts/k8s/create_users.zsh"
 alias build_images="./scripts/docker/build_images.zsh"
 alias delete_images="./scripts/docker/delete_images.zsh"
 alias trivy_images_scan="./scripts/docker/trivy_images_scan.zsh"

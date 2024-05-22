@@ -4,9 +4,6 @@
 
 source scripts/variables.zsh
 
-CLUSTER_USERNAME=developer
-GROUP=devs
-
 # Switching to admin user
 
 echo "Switching to admin user..."
@@ -19,7 +16,7 @@ kubectl delete csr $CLUSTER_USERNAME
 kubectl config delete-context $CLUSTER_USERNAME
 kubectl config delete-user $CLUSTER_USERNAME
 
-USER_DIR=$K8S_DIR/users/$CLUSTER_USERNAME
+USER_DIR=$USERS_DIR/$CLUSTER_USERNAME
 FILENAME_WITH_PATH=$USER_DIR/$CLUSTER_USERNAME
 
 echo "Creating user: $CLUSTER_USERNAME...."

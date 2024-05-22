@@ -15,6 +15,10 @@ DOCKER_DIR="$ROOT_DIR/src/docker"
 
 ## App
 
+## Users
+CLUSTER_USERNAME=developer
+GROUP=devs
+
 #### TODO: USE BASE IMAGE VARIABLES WITH DOCKER BUILDS
 ALPINE_DEV="alpine:dev"
 ALPINE_DEV_BASE_IMAGE="alpine:3.19.1"
@@ -32,8 +36,11 @@ K8S_DIR="$ROOT_DIR/src/k8s"
 K8S_SEC_DIR="$ROOT_DIR/src/k8s/secured_app"
 K8S_VULN_DIR="$ROOT_DIR/src/k8s/extremely_vulnerable"
 
-# Logs
-LOGS_DIR="$ROOT_DIR/logs"
+# Artifacts
+
+USERS_DIR="$ROOT_DIR/artifacts/users"
+NGINX_DIR="$ROOT_DIR/artifacts/nginx"
+LOGS_DIR="$ROOT_DIR/artifacts/logs"
 KIND_LOGS_DIR=$LOGS_DIR/kind
 TRIVY_LOGS_DIR=$LOGS_DIR/trivy
 KUBESEC_LOGS_DIR=$LOGS_DIR/kubesec

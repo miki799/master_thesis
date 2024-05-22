@@ -14,10 +14,13 @@ kubectl apply -f $K8S_SEC_DIR/namespaces.yaml
 # -newkey rsa:2048 - generates RSA 2048bits private key
 # -keyout - where the generated key should be saved
 # -out - where the generated private key should be saved
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $K8S_SEC_DIR/nginx/nginx.key -out $K8S_SEC_DIR/nginx/nginx.crt \
+
+mkdir -p $NGINX_DIR
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $NGINX_DIR/nginx.key -out $NGINX_DIR/nginx.crt \
 -subj "/CN=localhost" -addext "subjectAltName=DNS:nginx-svc.dev.svc.cluster.local"
 
-kubectl create secret tls nginx-secret -n dev --key=$K8S_SEC_DIR/nginx/nginx.key --cert=$K8S_SEC_DIR/nginx/nginx.crt
+kubectl create secret tls nginx-secret -n dev --key=$NGINX_DIR/nginx.key --cert=$NGINX_DIR/nginx.crt
 
 ## 3 Deploy nginx-svc (ClusterIP, ConfigMap and Pod)
 
