@@ -11,3 +11,12 @@ kind export logs --name $CLUSTER_NAME "$KIND_LOGS_DIR/$(date '+%Y-%m-%d_%H-%M-%S
 # Delete cluster
 
 kind delete cluster --name $CLUSTER_NAME
+
+# Delete certs and keys
+
+echo "Deleting certs and keys..."
+
+rm -rf $USERS_DIR
+rm -rf $NGINX_DIR
+
+echo "Certs and keys deleted!"

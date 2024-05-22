@@ -78,4 +78,4 @@ kubectl get csr $CLUSTER_USERNAME -o jsonpath='{.status.certificate}'| base64 -d
 echo "Adding user to the kubeconfig:"
 kubectl config set-credentials $CLUSTER_USERNAME --client-key=$FILENAME_WITH_PATH.key --client-certificate=$FILENAME_WITH_PATH.crt --embed-certs=true
 kubectl config set-context $CLUSTER_USERNAME --cluster=kind-$CLUSTER_NAME --user=$CLUSTER_USERNAME
-kubectl config use-context $CLUSTER_USERNAME
+# kubectl config use-context $CLUSTER_USERNAME
