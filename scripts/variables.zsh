@@ -37,7 +37,7 @@ KUBESEC="kubesec/kubesec:512c5e0"
 # Kubernetes
 K8S_DIR="$ROOT_DIR/src/k8s"
 K8S_SEC_DIR="$ROOT_DIR/src/k8s/secured_app"
-K8S_VULN_DIR="$ROOT_DIR/src/k8s/extremely_vulnerable"
+K8S_VULN_DIR="$ROOT_DIR/src/k8s/vulnerable_app"
 
 # Artifacts
 

@@ -4,7 +4,7 @@ source scripts/variables.zsh
 
 ## 1 Create namespaces
 
-kubectl apply -f $K8S_SEC_DIR/namespaces.yaml
+kubectl apply -f $K8S_DIR/namespaces.yaml
 
 ## 2 Create nginx secret (self-signed certificate)
 
@@ -41,6 +41,7 @@ kubectl apply -f $K8S_SEC_DIR/rce-app/rce-app.yaml
 ## 7 Deploy NetworkPolicy
 
 kubectl apply -f $K8S_SEC_DIR/network-policies/dev-restrict-traffic.yaml
+kubectl apply -f $K8S_SEC_DIR/network-policies/default-deny-traffic.yaml
 
 ## 8 Configure RBAC
 

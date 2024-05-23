@@ -19,6 +19,17 @@ spec:
           "-c",
           "while true; do curl --no-buffer --cacert /etc/secret/tls.crt https://nginx-svc.dev.svc.cluster.local:443; sleep 15; done",
         ]
+      securityContext:
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        runAsUser: 15342
+        privileged: false
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+          add:
+            - NET_BIND_SERVICE
       resources:
         limits:
           memory: "128Mi"

@@ -14,4 +14,3 @@ alias deploy_falco="./scripts/k8s/deploy_falco.zsh"
 alias kubebench_scan="./scripts/k8s/kubebench_scan.zsh"
 alias kubesec_scan="./scripts/k8s/kubesec_scan.zsh"
 alias clean_up="./scripts/k8s/clean_up.zsh"
-
