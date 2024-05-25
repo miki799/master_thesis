@@ -4,7 +4,7 @@ source scripts/variables.zsh
 
 ## 1 Create namespaces
 
-kubectl apply -f $K8S_DIR/namespaces.yaml
+kubectl apply -f $K8S_SEC_DIR/namespaces.yaml
 
 ## 2 Create nginx secret (self-signed certificate)
 

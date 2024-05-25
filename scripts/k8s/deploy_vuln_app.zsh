@@ -4,7 +4,7 @@ source scripts/variables.zsh
 
 ## 1 Create namespaces
 
-kubectl apply -f $K8S_DIR/namespaces.yaml
+kubectl apply -f $K8S_VULN_DIR/namespaces.yaml
 
 ## 2 Deploy nginx (ClusterIP, ConfigMap, Pod)
 
