@@ -21,5 +21,5 @@ if kubectl get node $CP_NODE_NAME &> /dev/null; then
     kind load docker-image $VULN_APP $ALPINE_SEC $ALPINE_DEV --name $CLUSTER_NAME
     echo "Finished!"
 else
-    echo "$CP_NODE_NAME node does not exist"
+    echo "$CP_NODE_NAME node does not exist!"
 fi

@@ -6,6 +6,15 @@ RUN apk update; \
     apk add --no-cache curl=8.5.0-r0; \
     curl --version
 
-CMD ["/bin/sh", "-c", "while true; do sleep 3600; done"]
+# Sets current workdir to /app dir
+WORKDIR /app
+
+# Copy files from local dir to the /app dir
+COPY ./request.sh /app/
+
+# Go back to root dir
+WORKDIR /
+
+CMD ["/bin/sh", "-c", "./app/request.sh"]
 
 LABEL owner=mikolajtelec

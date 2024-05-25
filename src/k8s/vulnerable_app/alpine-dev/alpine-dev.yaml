@@ -9,13 +9,6 @@ spec:
   containers:
     - name: alpine-dev
       image: alpine:dev
-      # command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
-      command:
-        [
-          "/bin/sh",
-          "-c",
-          "while true; do curl http://nginx-svc.dev.svc.cluster.local:80; sleep 15; done",
-        ]
       resources:
         limits:
           memory: "128Mi"
