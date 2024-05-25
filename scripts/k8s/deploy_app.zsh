@@ -38,7 +38,7 @@ kubectl apply -f $K8S_SEC_DIR/rce-app/rce-app.yaml
 
 # kubectl apply -f $K8S_SEC_DIR/alpine-security/alpine-security.yaml
 
-## 7 Deploy NetworkPolicy
+## 7 Deploy NetworkPolicy resources
 
 kubectl apply -f $K8S_SEC_DIR/network-policies/dev-restrict-traffic.yaml
 kubectl apply -f $K8S_SEC_DIR/network-policies/default-deny-traffic.yaml

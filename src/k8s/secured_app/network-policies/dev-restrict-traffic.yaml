@@ -9,16 +9,22 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: restrict-traffic
+  name: restrict-app-traffic
   namespace: dev
 spec:
   podSelector:
-    matchLabels: {}
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - vuln-app
+          - alpine-dev
+          - nginx
   policyTypes:
     - Ingress
     - Egress
   ingress:
-    # ingress traffic from pod with label=alpine-dev is allowed on port 443 (nginx ClusterIP service port)
+    # ingress traffic from pod with label app=alpine-dev is allowed on port 443 (nginx ClusterIP service port)
     - from:
         - podSelector:
             matchLabels:
@@ -26,7 +32,7 @@ spec:
       ports:
         - protocol: TCP
           port: 443
-    # ingress traffic from pod with label=alpine-dev is allowed on port 5000 (vuln_app ClusterIP service port)
+    # ingress traffic from pod with label app=alpine-dev is allowed on port 5000 (vuln_app ClusterIP service port)
     - from:
         - podSelector:
             matchLabels:
@@ -35,7 +41,7 @@ spec:
         - protocol: TCP
           port: 5000
   egress:
-    # egress traffic to the pod with label=nginx is allowed on port 443 (nginx ClusterIP service port)
+    # egress traffic to the pod with label app=nginx is allowed on port 443 (nginx ClusterIP service port)
     - to:
         - podSelector:
             matchLabels:
@@ -43,7 +49,7 @@ spec:
       ports:
         - protocol: TCP
           port: 443
-    # egress traffic to the pod with label=vuln-app is allowed on port 5000 (vuln-app ClusterIP service port)
+    # egress traffic to the pod with label app=vuln-app is allowed on port 5000 (vuln-app ClusterIP service port)
     - to:
         - podSelector:
             matchLabels:
