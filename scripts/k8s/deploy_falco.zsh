@@ -16,7 +16,7 @@ helm repo update
 
 helm install falco falcosecurity/falco \
      --set tty=true \
-     --namespace $SECURITY_NAMESPACE \
+     --namespace $FALCO_NAMESPACE \
      --set driver.kind=modern_ebpf \
      -f $K8S_SEC_DIR/falco/rules/custom-rules.yaml
     #  --set falcosidekick.enabled=true \

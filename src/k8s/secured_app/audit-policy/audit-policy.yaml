@@ -14,7 +14,7 @@ rules:
         # Resource "pods" doesn't match requests to any subresource of pods (like /status or /log),
         # which is consistent with the typical RBAC policy.
         resources: ["pods"]
-    namespaces: ["security", "dev"]
+    namespaces: ["falco", "dev"]
 
   # Only check access to resource "pods"
   # - level: Metadata
@@ -28,7 +28,7 @@ rules:
     resources:
       - group: ""
         resources: ["secrets", "configmaps"]
-    namespaces: ["security", "dev"]
+    namespaces: ["falco", "dev"]
 
   # Log role and rolebinding changes at RequestResponse level
   - level: RequestResponse
@@ -37,7 +37,7 @@ rules:
       - group: "rbac.authorization.k8s.io"
         resources:
           ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
-    namespaces: ["security", "dev"]
+    namespaces: ["falco", "dev"]
 
   # Log serviceaccount changes at RequestResponse level
   - level: RequestResponse
@@ -45,7 +45,7 @@ rules:
     resources:
       - group: ""
         resources: ["serviceaccounts"]
-    namespaces: ["security", "dev"]
+    namespaces: ["falco", "dev"]
 
   # Log NetworkPolicy changes at RequestResponse level
   - level: RequestResponse
@@ -53,7 +53,7 @@ rules:
     resources:
       - group: "networking.k8s.io"
         resources: ["networkpolicies"]
-    namespaces: ["security", "dev"]
+    namespaces: ["falco", "dev"]
 
   # TODO: Add watching actions of user
 

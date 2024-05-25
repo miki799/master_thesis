@@ -6,8 +6,8 @@ source scripts/variables.zsh
 
 echo "Deleting namespaces..."
 
-kubectl delete ns dev
-kubectl delete ns security
+kubectl delete ns $DEV_NAMESPACE
+kubectl delete ns $FALCO_NAMESPACE
 
 echo "Namespaces deleted!"
 

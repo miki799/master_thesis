@@ -8,6 +8,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: security
+  name: falco
   labels:
-    name: security
+    name: falco

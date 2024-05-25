@@ -20,4 +20,4 @@ plugins:
       exemptions:
         usernames: []
         runtimeClasses: []
-        namespaces: [kube-system, security]
+        namespaces: [kube-system, falco]
