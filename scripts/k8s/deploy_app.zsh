@@ -34,16 +34,12 @@ kubectl apply -f $K8S_SEC_DIR/alpine-dev/alpine-dev.yaml
 
 kubectl apply -f $K8S_SEC_DIR/rce-app/rce-app.yaml
 
-## 6 Deploy alpine-security
-
-# kubectl apply -f $K8S_SEC_DIR/alpine-security/alpine-security.yaml
-
-## 7 Deploy NetworkPolicy resources
+## 6 Deploy NetworkPolicy resources
 
 kubectl apply -f $K8S_SEC_DIR/network-policies/dev-restrict-traffic.yaml
 kubectl apply -f $K8S_SEC_DIR/network-policies/default-deny-traffic.yaml
 
-## 8 Configure RBAC
+## 7 Configure RBAC
 
 ### devs group access control
 

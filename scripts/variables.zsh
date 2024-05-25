@@ -27,8 +27,6 @@ ALPINE_DEV="alpine:dev"
 ALPINE_DEV_BASE_IMAGE="alpine:3.19.1"
 VULN_APP="vuln_app:1.0"
 VULN_APP_BASE_IMAGE="python:3"
-ALPINE_SEC="alpine:security"
-ALPINE_SEC_BASE_IMAGE="alpine:3.19.1"
 NGINX="nginx:1.25.5"
 
 ## Tools
