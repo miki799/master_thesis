@@ -19,3 +19,7 @@ rm -rf $USERS_DIR
 rm -rf $NGINX_DIR
 
 echo "Certs and keys deleted!"
+
+## 3 Delete users
+
+source scripts/k8s/users.zsh --delete

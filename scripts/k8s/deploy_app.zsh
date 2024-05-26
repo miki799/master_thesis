@@ -42,8 +42,10 @@ kubectl apply -f $K8S_SEC_DIR/network-policies/default-deny-traffic.yaml
 ## 7 Configure RBAC
 
 ### devs group access control
-
 kubectl apply -f $K8S_SEC_DIR/rbac/devs.yaml
+
+### default SA
+kubectl apply -f $K8S_SEC_DIR/rbac/default-sa.yaml
 
 ## 8 Deploy Falco
 

