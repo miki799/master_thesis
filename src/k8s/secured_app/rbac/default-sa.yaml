@@ -1,5 +1,14 @@
+# Default ServiceAccount assigned to the resource won't have token mounted
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: default
-automountServiceAccountToken: false # Default ServiceAccount assigned to the resource won't have token mounted
+  namespace: default
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: dev
+automountServiceAccountToken: false

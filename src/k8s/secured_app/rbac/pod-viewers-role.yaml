@@ -1,0 +1,23 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pod-viewers-role
+  namespace: dev
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    # +The get, list and watch verbs can all return the full details of a resource. In terms of access to the returned data they are equivalent. For example, list on secrets will reveal the data attributes of any returned resources.
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-viewers-rb
+  namespace: dev
+subjects:
+  - kind: Group
+    name: pod-viewers
+roleRef:
+  kind: Role
+  name: pod-viewers-role
+  apiGroup: rbac.authorization.k8s.io

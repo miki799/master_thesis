@@ -2,8 +2,8 @@
 
 source scripts/variables.zsh
 
-USERNAMES=(developer observer)
-GROUPS=(devs viewers)
+USERNAMES=("developer" "pod-viewer")
+GROUPS=("devs" "pod-viewers")
 
 create_user() {
   local username=$1
@@ -15,7 +15,6 @@ create_user() {
   echo "Switching to admin user..."
   kubectl config use-context kind-$CLUSTER_NAME
 
-  echo "Creating user: $username...."
   mkdir -p $USER_DIR
 
   echo "Creating user private key..."
