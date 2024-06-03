@@ -56,6 +56,12 @@ nodes:
       #   containerPath: /etc/kubernetes/policies/falco-webhook-config.yaml
       #   readOnly: true
   - role: worker
+    # used for simulating attack
+    # extraPortMappings:
+    #   - containerPort: 30007
+    #     hostPort: 6000
+    #     listenAddress: "127.0.0.1"
+    #     protocol: TCP
 networking:
   # disables kindnet CNI which doesn't support NetworkPolicies
   disableDefaultCNI: true
