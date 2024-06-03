@@ -8,8 +8,8 @@ spec:
     app: nginx
   ports:
     - protocol: TCP
-      port: 443
-      targetPort: 443
+      port: 4430
+      targetPort: 4430
   type: ClusterIP
 ---
 apiVersion: v1
@@ -20,7 +20,7 @@ metadata:
 data:
   nginx.conf: |
     server {
-      listen       443 ssl;
+      listen       4430 ssl;
       server_name  localhost;
 
       ssl_certificate /etc/secret/tls.crt;
@@ -41,23 +41,41 @@ metadata:
     app: nginx
 spec:
   securityContext:
+    fsGroup: 101
+    runAsUser: 101
+    runAsGroup: 101
+    runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
   containers:
     - name: nginx
-      image: nginx:1.25.5
-      volumeMounts:
-        # TODO: make volumes read only -> readOnly: true
-        - name: config-volume
-          mountPath: /etc/nginx/conf.d
-        - name: secret-volume
-          mountPath: /etc/secret
+      image: nginxinc/nginx-unprivileged:1.25-alpine
       ports:
-        - containerPort: 443
+        - containerPort: 4430
+      securityContext:
+        privileged: false
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
       resources:
         limits:
           memory: "128Mi"
           cpu: "500m"
+      volumeMounts:
+        - name: cache-nginx
+          mountPath: /var/cache/nginx
+        - name: var-run
+          mountPath: /var/run
+        - name: tmp
+          mountPath: /tmp
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+        - name: secret-volume
+          mountPath: /etc/secret
+          readOnly: true
   volumes:
     - name: config-volume
       configMap:
@@ -65,3 +83,9 @@ spec:
     - name: secret-volume
       secret:
         secretName: nginx-secret
+    - name: cache-nginx
+      emptyDir: {}
+    - name: var-run
+      emptyDir: {}
+    - name: tmp
+      emptyDir: {}

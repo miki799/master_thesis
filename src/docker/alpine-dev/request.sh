@@ -4,9 +4,8 @@
 sleep 10
 
 while true; do
-    # Check if cacert file exists
     if [ -f "/etc/secret/tls.crt" ]; then
-        curl --no-buffer --cacert /etc/secret/tls.crt https://nginx-svc.dev.svc.cluster.local:443
+        curl --no-buffer --cacert /etc/secret/tls.crt https://nginx-svc.dev.svc.cluster.local:4430
     else
         curl --no-buffer -k http://nginx-svc.dev.svc.cluster.local:80
     fi
