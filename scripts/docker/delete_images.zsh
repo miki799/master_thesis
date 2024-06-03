@@ -2,6 +2,6 @@
 
 source scripts/variables.zsh
 
-echo "Deleting images $NGINX_DEV $ALPINE_DEV $VULN_APP..."
+echo "Deleting images $NGINX $NGINX_UNPRIVILEGED $ALPINE_DEV $VULN_APP..."
 
-docker rmi $NGINX_DEV $ALPINE_DEV $VULN_APP
+docker rmi $NGINX $NGINX_UNPRIVILEGED $ALPINE_DEV $VULN_APP

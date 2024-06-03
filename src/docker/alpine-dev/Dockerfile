@@ -1,5 +1,6 @@
-# Alpine linux as base image
-FROM alpine:3.19.1
+ARG IMAGE_NAME_WITH_TAG=alpine:3.19.1
+
+FROM ${IMAGE_NAME_WITH_TAG}
 
 # Install curl:8.5.0-r0
 RUN apk update; \

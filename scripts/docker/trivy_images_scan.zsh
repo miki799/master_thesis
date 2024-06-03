@@ -16,6 +16,10 @@ echo "Scanning $VULN_APP_BASE_IMAGE image used as base image for building $VULN_
 trivy image $VULN_APP_BASE_IMAGE --scanners vuln > $NEW_LOGS_DIR/$VULN_APP_BASE_IMAGE.logs
 echo "Scan finished!"
 
-echo "Scanning image $NGINX image used by nginx-dev pod..."
-trivy image $NGINX --scanners vuln > $NEW_LOGS_DIR/$NGINX.logs
+echo "Scanning image $NGINX_BASE_IMAGE image used by $NGINX pod..."
+trivy image $NGINX_BASE_IMAGE --scanners vuln > $NEW_LOGS_DIR/$NGINX_BASE_IMAGE.logs
+echo "Scan finished!"
+
+echo "Scanning image $NGINX_UNPRIVILEGED_BASE_IMAGE image used by $NGINX_UNPRIVILEGED..."
+trivy image $NGINX_UNPRIVILEGED_BASE_IMAGE --scanners vuln > $NEW_LOGS_DIR/nginxinc_slash_nginx-unprivileged:1.26.1-alpine.logs
 echo "Scan finished!"

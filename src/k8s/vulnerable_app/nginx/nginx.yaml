@@ -39,7 +39,7 @@ metadata:
 spec:
   containers:
     - name: nginx
-      image: nginx:1.25.5
+      image: nginx:dev
       volumeMounts:
         - name: config-volume
           mountPath: /etc/nginx/conf.d

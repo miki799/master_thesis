@@ -1,4 +1,6 @@
-FROM python:3
+ARG IMAGE_NAME_WITH_TAG=python:3
+
+FROM ${IMAGE_NAME_WITH_TAG}
 
 # Install curl
 RUN apt-get update && apt-get install -y curl

@@ -58,8 +58,10 @@ image_exists() {
 }
 
 if image_exists $VULN_APP && \
-   image_exists $ALPINE_DEV; then
-    kind load docker-image $VULN_APP $ALPINE_DEV --name $CLUSTER_NAME
+   image_exists $ALPINE_DEV && \
+   image_exists $NGINX_UNPRIVILEGED && \
+   image_exists $NGINX; then
+    kind load docker-image $VULN_APP $ALPINE_DEV $NGINX_UNPRIVILEGED $NGINX --name $CLUSTER_NAME
 else
     echo "One or more Docker images are not present on the local machine."
 fi

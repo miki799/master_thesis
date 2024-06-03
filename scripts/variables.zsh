@@ -27,7 +27,10 @@ ALPINE_DEV="alpine:dev"
 ALPINE_DEV_BASE_IMAGE="alpine:3.19.1"
 VULN_APP="vuln_app:1.0"
 VULN_APP_BASE_IMAGE="python:3"
-NGINX="nginx:1.25.5"
+NGINX="nginx:dev"
+NGINX_BASE_IMAGE="nginx:1.26.1-alpine"
+NGINX_UNPRIVILEGED="nginx:dev_unprivileged"
+NGINX_UNPRIVILEGED_BASE_IMAGE="nginxinc/nginx-unprivileged:1.26.1-alpine"
 
 ## Tools
 KUBESEC="kubesec/kubesec:512c5e0"
