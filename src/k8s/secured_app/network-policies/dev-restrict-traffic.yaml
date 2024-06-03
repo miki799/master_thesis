@@ -32,14 +32,14 @@ spec:
       ports:
         - protocol: TCP
           port: 4430
-    # ingress traffic from pod with label app=alpine-dev is allowed on port 5000 (vuln_app ClusterIP service port)
+    # ingress traffic from pod with label app=alpine-dev is allowed on port 6000 (vuln_app ClusterIP service port)
     - from:
         - podSelector:
             matchLabels:
               app: alpine-dev
       ports:
         - protocol: TCP
-          port: 5000
+          port: 6000
   egress:
     # egress traffic to the pod with label app=nginx is allowed on port 4430 (nginx ClusterIP service port)
     - to:
@@ -49,14 +49,14 @@ spec:
       ports:
         - protocol: TCP
           port: 4430
-    # egress traffic to the pod with label app=vuln-app is allowed on port 5000 (vuln-app ClusterIP service port)
+    # egress traffic to the pod with label app=vuln-app is allowed on port 6000 (vuln-app ClusterIP service port)
     - to:
         - podSelector:
             matchLabels:
               app: vuln-app
       ports:
         - protocol: TCP
-          port: 5000
+          port: 6000
     # allows communication with k8s DNS service
     - to:
         - namespaceSelector:

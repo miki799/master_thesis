@@ -2,7 +2,7 @@
 
 ## What does it do?
 
-App exposes HTTP endpoint `/execute` which allows executing commands on the container
+App exposes HTTP endpoint `/run` which allows executing commands on the container
 
 ## How to run?
 
@@ -19,8 +19,8 @@ App exposes HTTP endpoint `/execute` which allows executing commands on the cont
 
 Manual special characters encoding:
 
-`curl "http://vuln-app-svc.dev.svc.cluster.local:5000/execute?command=ls%20-la"`
+`curl "http://vuln-app-svc.dev.svc.cluster.local:6000/run?cmd=ls%20-la"`
 
 Auto special characters encoding:
 
-`curl -G "http://vuln-app-svc.dev.svc.cluster.local:5000/execute" --data-urlencode "command=ls -la"`
+`curl -G "http://vuln-app-svc.dev.svc.cluster.local:6000/run" --data-urlencode "cmd=ls -la"`

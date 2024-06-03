@@ -8,9 +8,9 @@ spec:
     app: vuln-app
   ports:
     - protocol: TCP
-      port: 5000
-      targetPort: 5000
-  type: ClusterIP # accessible only on cluster internal ip
+      port: 6000
+      targetPort: 6000
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: Pod
@@ -21,17 +21,25 @@ metadata:
     app: vuln-app
 spec:
   securityContext:
-    # Due to PodSecurity admission controller running those have to be set
-    runAsUser: 999
-    fsGroup: 999
+    fsGroup: 234
+    runAsUser: 234
+    runAsGroup: 234
+    runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
   containers:
     - name: vuln-app
       image: vuln_app:1.0
+      ports:
+        - containerPort: 6000
+      securityContext:
+        privileged: false
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
       resources:
         limits:
           memory: "128Mi"
           cpu: "500m"
-      ports:
-        - containerPort: 5000
