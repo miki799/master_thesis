@@ -16,4 +16,4 @@ kubectl apply -f $K8S_VULN_DIR/alpine-dev/alpine-dev.yaml
 
 ## 4 Deploy vulnerable app (ClusterIP, Pod)
 
-kubectl apply -f $K8S_VULN_DIR/rce-app/rce-app.yaml
+kubectl apply -f $K8S_VULN_DIR/vuln-app/vuln-app.yaml

@@ -43,7 +43,7 @@ kubectl apply -f $K8S_SEC_DIR/alpine-dev/alpine-dev.yaml
 
 ## 6 Deploy vulnerable app (ClusterIP, Pod)
 
-kubectl apply -f $K8S_SEC_DIR/rce-app/rce-app.yaml
+kubectl apply -f $K8S_SEC_DIR/vuln-app/vuln-app.yaml
 
 ## 7 Deploy NetworkPolicy resources
 

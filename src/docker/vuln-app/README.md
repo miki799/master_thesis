@@ -13,7 +13,7 @@ App exposes HTTP endpoint `/run` which allows executing commands on the containe
 #### Deploy
 
 `kubectl create ns dev`
-`kubectl apply -f rce_app.pod.yaml`
+`kubectl apply -f vuln-app.yaml`
 
 #### Test
 

@@ -13,7 +13,7 @@ docker build --build-arg IMAGE_NAME_WITH_TAG=$NGINX_BASE_IMAGE -t $NGINX .
 cd $DOCKER_DIR/nginx_unprivileged && \
 docker build --build-arg IMAGE_NAME_WITH_TAG=$NGINX_UNPRIVILEGED_BASE_IMAGE -t $NGINX_UNPRIVILEGED .
 
-cd $DOCKER_DIR/rce-app && \
+cd $DOCKER_DIR/vuln-app && \
 docker build --build-arg IMAGE_NAME_WITH_TAG=$VULN_APP_BASE_IMAGE -t $VULN_APP .
 
 echo "Finished building Docker images!"

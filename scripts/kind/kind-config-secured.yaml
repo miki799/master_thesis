@@ -59,7 +59,7 @@ nodes:
     # used for simulating attack
     # extraPortMappings:
     #   - containerPort: 30007
-    #     hostPort: 6000
+    #     hostPort: 6000 # vuln-app port
     #     listenAddress: "127.0.0.1"
     #     protocol: TCP
 networking:
