@@ -3,7 +3,7 @@
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 
 # Kind cluster
-CLUSTER_NAME=master-thesis
+CLUSTER_NAME=cluster
 KIND_CONFIG_DIR="$ROOT_DIR/scripts/kind"
 KIND_CONFIG_NAME=kind-config.yaml
 KIND_CONFIG_SECURED_NAME=kind-config-secured.yaml
