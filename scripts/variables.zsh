@@ -15,7 +15,7 @@ DOCKER_DIR="$ROOT_DIR/src/docker"
 
 ## App
 
-## Users
+#### Users
 CLUSTER_USERNAME=developer
 GROUP=devs
 
@@ -39,9 +39,9 @@ KUBESEC="kubesec/kubesec:512c5e0"
 K8S_DIR="$ROOT_DIR/src/k8s"
 K8S_SEC_DIR="$ROOT_DIR/src/k8s/secured_app"
 K8S_VULN_DIR="$ROOT_DIR/src/k8s/vulnerable_app"
+K8S_VULNS_ATTACKS_DIR="$ROOT_DIR/src/k8s/vulns_and_attacks"
 
 # Artifacts
-
 USERS_DIR="$ROOT_DIR/artifacts/users"
 NGINX_DIR="$ROOT_DIR/artifacts/nginx"
 LOGS_DIR="$ROOT_DIR/artifacts/logs"
