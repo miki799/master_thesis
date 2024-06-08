@@ -12,8 +12,6 @@ nodes:
             audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
             admission-control-config-file: /etc/kubernetes/pss-config/pss-cluster.yaml
             encryption-provider-config: /etc/kubernetes/enc/encryption-configuration.yaml
-            # Falco k8s-plugin currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
-            # audit-webhook-config-file: /etc/kubernetes/policies/falco-webhook-config.yaml
           # mount new files / directories on the control plane
           extraVolumes:
             - name: audit-policies
@@ -50,17 +48,7 @@ nodes:
         containerPath: /etc/kubernetes/enc/encryption-configuration.yaml
         readOnly: true
         propagation: None
-      # Falco k8s-plugin currently not working directly on Mac with Linuxkit, but these directions work on Linux guest OS running kind.
-      # - hostPath: ./src/k8s/secured_app/falco/falco-webhook-config.yaml
-      #   containerPath: /etc/kubernetes/policies/falco-webhook-config.yaml
-      #   readOnly: true
   - role: worker
-    # used for simulating attack
-    # extraPortMappings:
-    #   - containerPort: 30007
-    #     hostPort: 6000 # vuln-app port
-    #     listenAddress: "127.0.0.1"
-    #     protocol: TCP
 networking:
   # disables kindnet CNI which doesn't support NetworkPolicies
   disableDefaultCNI: true
