@@ -68,7 +68,7 @@ deploy_secured_app() {
     kubectl apply -f $K8S_SEC_DIR/rbac/devs-role.yaml
 
     ### pod-viewers group
-    kubectl apply -f $K8S_SEC_DIR/rbac/pod-viewers-role.yaml
+    # kubectl apply -f $K8S_SEC_DIR/rbac/pod-viewers-role.yaml
 
     ### default SA
     kubectl apply -f $K8S_SEC_DIR/rbac/default-sa.yaml
