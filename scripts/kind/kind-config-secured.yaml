@@ -10,7 +10,7 @@ nodes:
           extraArgs:
             audit-log-path: /var/log/kubernetes/kube-apiserver-audit.log
             audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
-            admission-control-config-file: /etc/kubernetes/pss-config/pss-cluster.yaml
+            admission-control-config-file: /etc/kubernetes/psa-config/psa.yaml
             encryption-provider-config: /etc/kubernetes/enc/encryption-configuration.yaml
           # mount new files / directories on the control plane
           extraVolumes:
@@ -24,9 +24,9 @@ nodes:
               mountPath: /var/log/kubernetes
               readOnly: false
               pathType: DirectoryOrCreate
-            - name: pss-config
-              hostPath: /etc/kubernetes/pss-config
-              mountPath: /etc/kubernetes/pss-config
+            - name: psa-config
+              hostPath: /etc/kubernetes/psa-config
+              mountPath: /etc/kubernetes/psa-config
               readOnly: true
               pathType: DirectoryOrCreate
             - name: enc-config
@@ -40,8 +40,8 @@ nodes:
         containerPath: /etc/kubernetes/policies/audit-policy.yaml
         readOnly: true
         propagation: None # changes on the host system won't be propagated to the container
-      - hostPath: ./src/k8s/secured_app/pod-security-standard/pss-cluster.yaml
-        containerPath: /etc/kubernetes/pss-config/pss-cluster.yaml
+      - hostPath: ./src/k8s/secured_app/pod-security-admission/psa.yaml
+        containerPath: /etc/kubernetes/psa-config/psa.yaml
         readOnly: true
         propagation: None
       - hostPath: ./src/k8s/secured_app/api-server/encryption-configuration.yaml
