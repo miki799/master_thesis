@@ -1,10 +1,10 @@
 # overprivileged ServiceAccounts
 
-## Pods creator
+## Pods creator - dev namespace
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: create-pods-sa
+  name: create-pods-dev-sa
   namespace: dev
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -29,6 +29,35 @@ subjects:
 roleRef:
   kind: Role
   name: create-pods-role
+  apiGroup: rbac.authorization.k8s.io
+---
+## Pods creator - cluster
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: create-pods-cluster-sa
+  namespace: dev
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: create-pods-cr
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: create-pods-crb
+subjects:
+  - kind: ServiceAccount
+    name: create-pods-cluster-sa
+    namespace: dev
+roleRef:
+  kind: ClusterRole
+  name: create-pods-cr
   apiGroup: rbac.authorization.k8s.io
 ---
 ## Node viewer

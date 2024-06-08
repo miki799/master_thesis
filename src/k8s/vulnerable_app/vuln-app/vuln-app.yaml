@@ -21,7 +21,8 @@ metadata:
     app: vuln-app
 spec:
   # serviceAccountName: node-viewer-sa
-  serviceAccountName: create-pods-sa
+  # serviceAccountName: create-pods-sa
+  serviceAccountName: create-pods-cluster-sa
   containers:
     - name: vuln-app
       image: vuln_app:1.0
