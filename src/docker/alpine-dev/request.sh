@@ -4,10 +4,6 @@
 sleep 10
 
 while true; do
-    if [ -f "/etc/secret/tls.crt" ]; then
-        curl --no-buffer --cacert /etc/secret/tls.crt https://nginx-svc.dev.svc.cluster.local:4430
-    else
-        curl --no-buffer -k http://nginx-svc.dev.svc.cluster.local:80
-    fi
+    curl --no-buffer --cacert /etc/secret/tls.crt https://nginx-svc.dev.svc.cluster.local:4430
     sleep 15
 done

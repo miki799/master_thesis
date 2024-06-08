@@ -13,3 +13,13 @@ spec:
         limits:
           memory: "128Mi"
           cpu: "500m"
+      volumeMounts:
+        - name: secret-volume
+          mountPath: /etc/secret
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: nginx-secret
+        items:
+          - key: tls.crt
+            path: tls.crt
