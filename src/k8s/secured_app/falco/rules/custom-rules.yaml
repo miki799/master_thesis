@@ -41,45 +41,32 @@ customRules:
       priority: WARNING
       tags: [security, command_execution]
 
-    - rule: Detect Read/Modification of index.html file
-      desc: Detects when the index.html file is modified
+    - rule: Detect nsenter usage for namespace switching
+      desc: Detects the use of nsenter to switch namespaces and execute a command
       condition: >
-        (open_write or open_read) and
-        fd.name = "/usr/share/nginx/html/index.html"
+        spawned_process and
+        proc.name = "nsenter"
       output: >
-        Detected read/modification of index.html file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-      priority: WARNING
-      tags: [security, file_access]
+        nsenter used to switch namespaces and execute bash (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+      priority: CRITICAL
+      tags: [security, command_execution]
 
-    - rule: Detect Read/Modification of rce_app.py File
-      desc: Detects when the rce_app.py file is modified
-      condition: >
-        (open_write or open_read) and
-        fd.name = "/app/rce_app.py"
-      output: >
-        Detected read/modification of rce_app.py file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-      priority: WARNING
-      tags: [security, file_access]
-
-    # This rules don't detect interaction with k8s token
-
-    # - rule: Detect Find Command Searching for Token files
-    #   desc: Detects the use of the find command looking for files with names containing "token"
-    #   condition: >
-    #     spawned_process and
-    #     proc.name = "find" and
-    #     proc.args contains "token"
-    #   output: >
-    #     Find command used to search for token files (user=%user.name command=%proc.cmdline)
-    #   priority: WARNING
-    #   tags: [security, command_execution]
-
-    # - rule: Detect Editing Token Files
-    #   desc: Detects attempts to open files with names containing "token" for writing or reading
+    # - rule: Detect Read/Modification of index.html file
+    #   desc: Detects when the index.html file is modified
     #   condition: >
     #     (open_write or open_read) and
-    #     fd.name contains "token"
+    #     fd.name = "/usr/share/nginx/html/index.html"
     #   output: >
-    #     Detected access to a token file for editing (user=%user.name command=%proc.cmdline file=%fd.name)
+    #     Detected read/modification of index.html file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+    #   priority: WARNING
+    #   tags: [security, file_access]
+
+    # - rule: Detect Read/Modification of rce_app.py File
+    #   desc: Detects when the rce_app.py file is modified
+    #   condition: >
+    #     (open_write or open_read) and
+    #     fd.name = "/app/rce_app.py"
+    #   output: >
+    #     Detected read/modification of rce_app.py file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
     #   priority: WARNING
     #   tags: [security, file_access]
