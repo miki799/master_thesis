@@ -24,40 +24,40 @@ metadata:
   namespace: dev
 subjects:
   - kind: ServiceAccount
-    name: create-pods-sa
+    name: create-pods-dev-sa
     namespace: dev
 roleRef:
   kind: Role
   name: create-pods-role
   apiGroup: rbac.authorization.k8s.io
 ---
-## Pods creator - cluster
+## Pods - cluster
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: create-pods-cluster-sa
+  name: pods-cluster-sa
   namespace: dev
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: create-pods-cr
+  name: pods-cr
 rules:
   - apiGroups: [""]
     resources: ["pods"]
-    verbs: ["create"]
+    verbs: ["create", "get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: create-pods-crb
+  name: pods-crb
 subjects:
   - kind: ServiceAccount
-    name: create-pods-cluster-sa
+    name: pods-cluster-sa
     namespace: dev
 roleRef:
   kind: ClusterRole
-  name: create-pods-cr
+  name: pods-cr
   apiGroup: rbac.authorization.k8s.io
 ---
 ## Node viewer
