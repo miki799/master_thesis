@@ -20,12 +20,12 @@ deploy_basic_app() {
 
     ## 2 Create nginx secret (self-signed certificate)
 
-    # -x509 - This option specifies that the command should generate a self-signed certificate rather than a CSR.
-    # -nodes - openssl won't encrypt the key (no password)
-    # -days - certificate validity time
-    # -newkey rsa:2048 - generates RSA 2048bits private key
-    # -keyout - where the generated key should be saved
-    # -out - where the generated private key should be saved
+    ### -x509 - This option specifies that the command should generate a self-signed certificate rather than a CSR.
+    ### -nodes - openssl won't encrypt the key (no password)
+    ### -days - certificate validity time
+    ### -newkey rsa:2048 - generates RSA 2048bits private key
+    ### -keyout - where the generated key should be saved
+    ### -out - where the generated private key should be saved
 
     mkdir -p $NGINX_DIR
 
@@ -46,11 +46,9 @@ deploy_basic_app() {
 
     kubectl apply -f $K8S_VULNS_ATTACKS_DIR/overprivileged-sa.yaml
 
-    ## 6 Deploy vulnerable app (ClusterIP, NodePort Pod)
+    ## 6 Deploy vulnerable app (ClusterIP, Pod)
 
     kubectl apply -f $K8S_VULN_DIR/vuln-app/vuln-app.yaml
-
-    kubectl apply -f $K8S_VULNS_ATTACKS_DIR/vuln-app-nodeport.yaml
 
     ## 7 Deploy Falco
 
@@ -75,12 +73,12 @@ deploy_secured_app() {
 
     ## 3 Create nginx secret (self-signed certificate)
 
-    # -x509 - This option specifies that the command should generate a self-signed certificate rather than a CSR.
-    # -nodes - openssl won't encrypt the key (no password)
-    # -days - certificate validity time
-    # -newkey rsa:2048 - generates RSA 2048bits private key
-    # -keyout - where the generated key should be saved
-    # -out - where the generated private key should be saved
+    ### -x509 - This option specifies that the command should generate a self-signed certificate rather than a CSR.
+    ### -nodes - openssl won't encrypt the key (no password)
+    ### -days - certificate validity time
+    ### -newkey rsa:2048 - generates RSA 2048bits private key
+    ### -keyout - where the generated key should be saved
+    ### -out - where the generated private key should be saved
 
     mkdir -p $NGINX_DIR
 
