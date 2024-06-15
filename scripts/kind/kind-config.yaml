@@ -2,12 +2,12 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
-    # exposes API server on port 6443, normally it is exposed by Kind on random port to avoid colissions
-    extraPortMappings:
-      - containerPort: 6443
-        hostPort: 6443
-        listenAddress: "127.0.0.1"
-        protocol: TCP
+    # # exposes API server on port 6443, normally it is exposed by Kind on random port to avoid colissions
+    # extraPortMappings:
+    #   - containerPort: 6443
+    #     hostPort: 6443
+    #     listenAddress: "127.0.0.1"
+    #     protocol: TCP
     kubeadmConfigPatches:
       - |
         apiVersion: kubeadm.k8s.io/v1beta3
@@ -39,13 +39,13 @@ nodes:
         hostPort: 6000 # vuln-app port
         listenAddress: "127.0.0.1"
         protocol: TCP
-    kubeadmConfigPatches:
-      - |
-        kind: JoinConfiguration
-        nodeRegistration:
-          kubeletExtraArgs:
-            anonymous-auth: "true"
-            authorization-mode: "AlwaysAllow"
+    # kubeadmConfigPatches:
+    #   - |
+    #     kind: JoinConfiguration
+    #     nodeRegistration:
+    #       kubeletExtraArgs:
+    #         anonymous-auth: "true"
+    #         authorization-mode: "AlwaysAllow"
 networking:
   # disables kindnet CNI which doesn't support NetworkPolicies
   disableDefaultCNI: true

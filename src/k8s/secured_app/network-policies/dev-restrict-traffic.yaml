@@ -1,63 +1,68 @@
 # Kubernetes Network Policies follow a "deny by default" model.
 # So what is not specified here will by denied (e.g. from inside Pods we cannot send requests to the API server)
-
 # Following NetworkPolicy concerns dev namespace and allows:
-# alpine-dev -> nginx
-# alpine-dev -> vuln-app
-# every-pod-in-dev-namespace -> k8s dns service in kube-system namespace
+
+# alpine-dev <-> nginx
+# alpine-dev and nginx -> DNS
+# vuln-app - only external access through NodePort
+# other pods - no comm
 
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: restrict-app-traffic
+  name: default-deny-all
+  namespace: dev
+spec:
+  podSelector: {} # Selects all pods in the namespace
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-unknown-traffic
   namespace: dev
 spec:
   podSelector:
     matchExpressions:
       - key: app
-        operator: In
+        operator: NotIn
         values:
           - vuln-app
-          - alpine-dev
           - nginx
+          - alpine-dev
+      - key: app
+        operator: DoesNotExist
   policyTypes:
     - Ingress
     - Egress
   ingress:
-    # ingress traffic from pod with label app=alpine-dev is allowed on port 4430 (nginx ClusterIP service port)
-    - from:
-        - podSelector:
-            matchLabels:
-              app: alpine-dev
-      ports:
-        - protocol: TCP
-          port: 4430
-    # ingress traffic from pod with label app=alpine-dev is allowed on port 6000 (vuln_app ClusterIP service port)
-    - from:
-        - podSelector:
-            matchLabels:
-              app: alpine-dev
-      ports:
-        - protocol: TCP
-          port: 6000
+    - from: []
   egress:
-    # egress traffic to the pod with label app=nginx is allowed on port 4430 (nginx ClusterIP service port)
-    - to:
+    - to: []
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-nginx-from-alpine
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  policyTypes:
+    - Ingress
+    - Egress # only for DNS
+  ingress:
+    - from:
         - podSelector:
             matchLabels:
-              app: nginx
+              app: alpine-dev
       ports:
         - protocol: TCP
           port: 4430
-    # egress traffic to the pod with label app=vuln-app is allowed on port 6000 (vuln-app ClusterIP service port)
-    - to:
-        - podSelector:
-            matchLabels:
-              app: vuln-app
-      ports:
-        - protocol: TCP
-          port: 6000
-    # allows communication with k8s DNS service
+  egress:
     - to:
         - namespaceSelector:
             matchLabels:
@@ -67,3 +72,78 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-alpine-to-nginx
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: alpine-dev
+  policyTypes:
+    - Ingress
+    - Egress # only for DNS
+  ingress:
+    - from: []
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: nginx
+      ports:
+        - protocol: TCP
+          port: 4430
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-vuln-app
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: vuln-app
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from: []
+  egress:
+    - to: []
+---
+# vuln-app can be accessed from outside the cluster on port 6000
+# vuln-app can send data to any external destination outside cluster
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-nodeport-vuln-app
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: vuln-app
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0 # allows incoming traffic from every IP address
+      ports:
+        - protocol: TCP
+          port: 6000 # Pod port
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0 # allows outgoing traffic to every IP address

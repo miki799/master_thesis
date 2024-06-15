@@ -1,6 +1,6 @@
 # overprivileged ServiceAccounts
 
-## Pods creator - dev namespace
+## Pods - dev namespace
 apiVersion: v1
 kind: ServiceAccount
 metadata:

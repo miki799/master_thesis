@@ -9,8 +9,8 @@ spec:
   ports:
     - protocol: TCP
       port: 6000
-      targetPort: 6000
-  type: ClusterIP
+      nodePort: 30007
+  type: NodePort
 ---
 apiVersion: v1
 kind: Pod
@@ -20,9 +20,9 @@ metadata:
   labels:
     app: vuln-app
 spec:
+  serviceAccountName: create-pods-dev-sa
   # serviceAccountName: node-viewer-sa
-  # serviceAccountName: create-pods-sa
-  serviceAccountName: create-pods-cluster-sa
+  # serviceAccountName: create-pods-cluster-sa
   containers:
     - name: vuln-app
       image: vuln_app:1.0
