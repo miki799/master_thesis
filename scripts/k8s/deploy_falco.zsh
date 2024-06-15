@@ -18,7 +18,7 @@ helm install falco falcosecurity/falco \
      --set tty=true \
      --namespace $FALCO_NAMESPACE \
      --set driver.kind=modern_ebpf \
-     -f $K8S_SEC_DIR/falco/rules/custom-rules.yaml
+     -f $K8S_SEC_DIR/falco_rules/custom-rules.yaml
     #  --set falcosidekick.enabled=true \
     #  --set falcosidekick.webui.enabled=true \
     #  --set auditLog.enabled=true
