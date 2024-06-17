@@ -6,17 +6,18 @@ metadata:
   labels:
     app: alpine-dev
 spec:
+  serviceAccountName: default
   securityContext:
     fsGroup: 11111
-    runAsUser: 11111
-    runAsGroup: 11111
-    runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
   containers:
     - name: alpine-dev
       image: alpine:dev
       securityContext:
+        runAsUser: 11111
+        runAsGroup: 11111
+        runAsNonRoot: true
         privileged: false
         allowPrivilegeEscalation: false
         readOnlyRootFilesystem: true
@@ -27,6 +28,9 @@ spec:
         limits:
           memory: "128Mi"
           cpu: "500m"
+        requests:
+          memory: "100Mi"
+          cpu: "450m"
       volumeMounts:
         - name: secret-volume
           mountPath: /etc/secret
