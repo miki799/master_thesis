@@ -10,17 +10,6 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: default-deny-all
-  namespace: dev
-spec:
-  podSelector: {} # Selects all pods in the namespace
-  policyTypes:
-    - Ingress
-    - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
   name: deny-unknown-traffic
   namespace: dev
 spec:
@@ -37,10 +26,6 @@ spec:
   policyTypes:
     - Ingress
     - Egress
-  ingress:
-    - from: []
-  egress:
-    - to: []
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

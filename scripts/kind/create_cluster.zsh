@@ -43,7 +43,7 @@ kubectl cluster-info --context kind-$CLUSTER_NAME
 
 # Expose API server on port 6443, normally it is exposed by Kind on random port to avoid colissions
 
-# kubectl config set-cluster kind-$CLUSTER_NAME --server=https://127.0.0.1:6443
+kubectl config set-cluster kind-$CLUSTER_NAME --server=https://127.0.0.1:6443
 
 # Install Calico (needed for NetworkPolicies, kind Kindnet CNI doesn't support them)
 

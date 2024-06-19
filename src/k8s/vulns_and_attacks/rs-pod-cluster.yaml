@@ -1,9 +1,8 @@
-# pod with reverse she]l
+# pod with reverse shell - control-plane node
 apiVersion: v1
 kind: Pod
 metadata:
   name: busybox
-  namespace: dev
 spec:
   containers:
     - name: busybox
@@ -29,9 +28,9 @@ spec:
         - mountPath: /host
           name: hostfs
   volumes:
-    # host filesystem
     - name: hostfs
       hostPath:
-        path: /
-        type: Directory
-  restartPolicy: Never
+        path: /etc/kubernetes
+        type: "Directory"
+  nodeSelector:
+    kubernetes.io/hostname: "cluster-control-plane"

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: create-pods-cluster-sa
+  namespace: dev
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: create-pods-cr
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create", "get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: create-pods-crb
+subjects:
+  - kind: ServiceAccount
+    name: create-pods-cluster-sa
+    namespace: dev
+roleRef:
+  kind: ClusterRole
+  name: create-pods-cr
+  apiGroup: rbac.authorization.k8s.io

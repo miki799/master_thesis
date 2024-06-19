@@ -42,15 +42,11 @@ deploy_basic_app() {
 
     kubectl apply -f $K8S_VULN_DIR/alpine-dev/alpine-dev.yaml
 
-    ## 5 Deploy overprivileged SA
-
-    kubectl apply -f $K8S_VULNS_ATTACKS_DIR/overprivileged-sa.yaml
-
-    ## 6 Deploy vulnerable app (ClusterIP, Pod)
+    ## 5 Deploy vulnerable app (ClusterIP, Pod)
 
     kubectl apply -f $K8S_VULN_DIR/vuln-app/vuln-app.yaml
 
-    ## 7 Deploy Falco
+    ## 6 Deploy Falco
 
     source scripts/k8s/deploy_falco.zsh
 }
