@@ -2,8 +2,8 @@
 
 source scripts/variables.zsh
 
-USERNAMES=("developer" "pod-viewer")
-GROUPS=("devs" "pod-viewers")
+USERNAMES=("developer") # add username
+GROUPS=("devs") # add group name
 
 create_user() {
   local username=$1

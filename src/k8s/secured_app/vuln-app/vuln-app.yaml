@@ -22,7 +22,6 @@ metadata:
 spec:
   serviceAccountName: default
   securityContext:
-    fsGroup: 22222
     seccompProfile:
       type: RuntimeDefault
   containers:
