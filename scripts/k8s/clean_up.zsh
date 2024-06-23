@@ -16,6 +16,7 @@ echo "Namespaces deleted!"
 echo "Deleting certs and keys..."
 
 rm -rf $USERS_DIR
+rm -rf $APP_CA_DIR
 rm -rf $NGINX_DIR
 
 echo "Certs and keys deleted!"

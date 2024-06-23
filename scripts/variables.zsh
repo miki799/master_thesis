@@ -43,6 +43,7 @@ K8S_VULNS_ATTACKS_DIR="$ROOT_DIR/src/k8s/vulns_and_attacks"
 
 # Artifacts
 USERS_DIR="$ROOT_DIR/artifacts/users"
+APP_CA_DIR="$ROOT_DIR/artifacts/ca"
 NGINX_DIR="$ROOT_DIR/artifacts/nginx"
 LOGS_DIR="$ROOT_DIR/artifacts/logs"
 KIND_LOGS_DIR=$LOGS_DIR/kind

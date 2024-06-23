@@ -14,39 +14,52 @@ display_help() {
   echo ""
 }
 
+create_certificates_and_secrets() {
+    mkdir -p $APP_CA_DIR
+    mkdir -p $NGINX_DIR
+
+    # Create App CA and Secret called ca-secret
+
+    openssl genrsa -out $APP_CA_DIR/ca.key 2048
+
+    openssl req -x509 -new -nodes -key $APP_CA_DIR/ca.key -sha256 -days 365 -out $APP_CA_DIR/ca.crt -subj "/C=PL/ST=MPL/L=KRK/O=PK/CN=TelecCA"
+
+    kubectl create secret generic ca-secret -n $DEV_NAMESPACE --from-file=cert=$APP_CA_DIR/ca.crt
+
+    ## Create nginx certificate, private key and Secret called nginx-secret
+
+    openssl genrsa -out $NGINX_DIR/nginx.key 2048
+
+    openssl req -new -key $NGINX_DIR/nginx.key -out $NGINX_DIR/nginx.csr \
+    -subj "/CN=nginx-svc.dev.svc.cluster.local" \
+    -addext "subjectAltName=DNS:localhost,DNS:nginx-svc.dev.svc.cluster.local"
+
+    openssl x509 -req -in $NGINX_DIR/nginx.csr -CA $APP_CA_DIR/ca.crt -CAkey $APP_CA_DIR/ca.key -out $NGINX_DIR/nginx.crt -days 365 -sha256
+
+    kubectl create secret tls nginx-secret -n $DEV_NAMESPACE --key=$NGINX_DIR/nginx.key --cert=$NGINX_DIR/nginx.crt
+}
+
 deploy_basic_app() {
     ## 1 Create namespaces
     kubectl apply -f $K8S_DIR/namespaces.yaml
 
-    ## 2 Create nginx secret (self-signed certificate)
+    ## 2 Create ca and secrets
 
-    ### -x509 - This option specifies that the command should generate a self-signed certificate rather than a CSR.
-    ### -nodes - openssl won't encrypt the key (no password)
-    ### -days - certificate validity time
-    ### -newkey rsa:2048 - generates RSA 2048bits private key
-    ### -keyout - where the generated key should be saved
-    ### -out - where the generated private key should be saved
+    create_certificates_and_secrets
 
-    mkdir -p $NGINX_DIR
-
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $NGINX_DIR/nginx.key -out $NGINX_DIR/nginx.crt \
-    -subj "/CN=localhost" -addext "subjectAltName=DNS:nginx-svc.dev.svc.cluster.local"
-
-    kubectl create secret tls nginx-secret -n $DEV_NAMESPACE --key=$NGINX_DIR/nginx.key --cert=$NGINX_DIR/nginx.crt
-
-    ## 3 Deploy nginx (ClusterIP, ConfigMap, Pod)
+    ## 4 Deploy nginx (ClusterIP, ConfigMap, Pod)
 
     kubectl apply -f $K8S_VULN_DIR/nginx/nginx.yaml
 
-    ## 4 Deploy alpine-dev
+    ## 5 Deploy alpine-dev
 
     kubectl apply -f $K8S_VULN_DIR/alpine-dev/alpine-dev.yaml
 
-    ## 5 Deploy vulnerable app (ClusterIP, Pod)
+    ## 6 Deploy vulnerable app (ClusterIP, Pod)
 
     kubectl apply -f $K8S_VULN_DIR/vuln-app/vuln-app.yaml
 
-    ## 6 Deploy Falco
+    ## 7 Deploy Falco
 
     source scripts/k8s/deploy_falco.zsh
 }
@@ -67,40 +80,47 @@ deploy_secured_app() {
     ### default SA
     kubectl apply -f $K8S_SEC_DIR/rbac/default-sa.yaml
 
-    ## 3 Create nginx secret (self-signed certificate)
+    ## 3 Create ca certificate and ca-secret secret
 
-    ### -x509 - This option specifies that the command should generate a self-signed certificate rather than a CSR.
-    ### -nodes - openssl won't encrypt the key (no password)
-    ### -days - certificate validity time
-    ### -newkey rsa:2048 - generates RSA 2048bits private key
-    ### -keyout - where the generated key should be saved
-    ### -out - where the generated private key should be saved
-
+    mkdir -p $APP_CA_DIR
     mkdir -p $NGINX_DIR
 
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $NGINX_DIR/nginx.key -out $NGINX_DIR/nginx.crt \
-    -subj "/CN=localhost" -addext "subjectAltName=DNS:nginx-svc.dev.svc.cluster.local"
+    openssl genrsa -out $APP_CA_DIR/ca.key 2048
+
+    openssl req -x509 -new -nodes -key $APP_CA_DIR/ca.key -sha256 -days 365 -out $APP_CA_DIR/ca.crt -subj "/C=PL/ST=MPL/L=KRK/O=PK/CN=TelecCA"
+
+    kubectl create secret generic ca-secret -n $DEV_NAMESPACE --from-file=cert=$APP_CA_DIR/ca.crt
+
+    ## 4 Create nginx certificate and nginx-secret
+
+    openssl genrsa -out $NGINX_DIR/nginx.key 2048
+
+    openssl req -new -key $NGINX_DIR/nginx.key -out $NGINX_DIR/nginx.csr \
+    -subj "/CN=nginx-svc.dev.svc.cluster.local" \
+    -addext "subjectAltName=DNS:localhost,DNS:nginx-svc.dev.svc.cluster.local"
+
+    openssl x509 -req -in $NGINX_DIR/nginx.csr -CA $APP_CA_DIR/ca.crt -CAkey $APP_CA_DIR/ca.key -out $NGINX_DIR/nginx.crt -days 365 -sha256
 
     kubectl create secret tls nginx-secret -n $DEV_NAMESPACE --key=$NGINX_DIR/nginx.key --cert=$NGINX_DIR/nginx.crt
 
-    ## 4 Deploy nginx (ClusterIP, ConfigMap and Pod)
+    ## 5 Deploy nginx (ClusterIP, ConfigMap and Pod)
 
     kubectl apply -f $K8S_SEC_DIR/nginx/nginx.yaml
 
-    ## 5 Deploy alpine-dev
+    ## 6 Deploy alpine-dev
 
     kubectl apply -f $K8S_SEC_DIR/alpine-dev/alpine-dev.yaml
 
-    ## 6 Deploy vulnerable app (ClusterIP, Pod)
+    ## 7 Deploy vulnerable app (ClusterIP, Pod)
 
     kubectl apply -f $K8S_SEC_DIR/vuln-app/vuln-app.yaml
 
-    ## 7 Deploy NetworkPolicy resources
+    ## 8 Deploy NetworkPolicy resources
 
     kubectl apply -f $K8S_SEC_DIR/network-policies/dev-restrict-traffic.yaml
     kubectl apply -f $K8S_SEC_DIR/network-policies/default-deny-traffic.yaml
 
-    ## 8 Deploy Falco
+    ## 9 Deploy Falco
 
     source scripts/k8s/deploy_falco.zsh
 }

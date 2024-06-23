@@ -10,19 +10,10 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: deny-unknown-traffic
+  name: deny-all
   namespace: dev
 spec:
-  podSelector:
-    matchExpressions:
-      - key: app
-        operator: NotIn
-        values:
-          - vuln-app
-          - nginx
-          - alpine-dev
-      - key: app
-        operator: DoesNotExist
+  podSelector: {}
   policyTypes:
     - Ingress
     - Egress
@@ -70,8 +61,7 @@ spec:
   policyTypes:
     - Ingress
     - Egress # only for DNS
-  ingress:
-    - from: []
+  ingress: [] # TODO: FIX
   egress:
     - to:
         - podSelector:
@@ -89,23 +79,6 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: block-vuln-app
-  namespace: dev
-spec:
-  podSelector:
-    matchLabels:
-      app: vuln-app
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-    - from: []
-  egress:
-    - to: []
 ---
 # vuln-app can be accessed from outside the cluster on port 6000
 # vuln-app can send data to any external destination outside cluster
@@ -127,7 +100,7 @@ spec:
             cidr: 0.0.0.0/0 # allows incoming traffic from every IP address
       ports:
         - protocol: TCP
-          port: 6000 # Pod port
+          port: 6000 # vuln-app port
   egress:
     - to:
         - ipBlock:
