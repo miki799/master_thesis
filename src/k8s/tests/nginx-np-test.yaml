@@ -1,0 +1,197 @@
+# default ns
+# kubectl create secret tls nginx-secret -n default --key=artifacts/nginx/nginx.key --cert=artifacts/nginx/nginx.crt
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-np-test-svc
+  namespace: default
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 4430
+      targetPort: 4430
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-np-test-cm
+  namespace: default
+data:
+  nginx.conf: |
+    server {
+      listen       4430 ssl;
+      server_name  localhost;
+
+      ssl_certificate /etc/secret/tls.crt;
+      ssl_certificate_key /etc/secret/tls.key;
+
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+      }
+    }
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-np-test
+  namespace: default
+  labels:
+    app: nginx-np-test
+spec:
+  containers:
+    - name: nginx
+      image: nginx:dev
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d
+        - name: secret-volume
+          mountPath: /etc/secret
+      ports:
+        - containerPort: 4430
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+  volumes:
+    - name: config-volume
+      configMap:
+        name: nginx-np-test-cm
+    - name: secret-volume
+      secret:
+        secretName: nginx-secret
+---
+### falco ns
+# kubectl create secret tls nginx-secret -n falco --key=artifacts/nginx/nginx.key --cert=artifacts/nginx/nginx.crt
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-np-test-svc
+  namespace: falco
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 4430
+      targetPort: 4430
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-np-test-cm
+  namespace: falco
+data:
+  nginx.conf: |
+    server {
+      listen       4430 ssl;
+      server_name  localhost;
+
+      ssl_certificate /etc/secret/tls.crt;
+      ssl_certificate_key /etc/secret/tls.key;
+
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+      }
+    }
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-np-test
+  namespace: falco
+  labels:
+    app: nginx-np-test
+spec:
+  containers:
+    - name: nginx
+      image: nginx:dev
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d
+        - name: secret-volume
+          mountPath: /etc/secret
+      ports:
+        - containerPort: 4430
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+  volumes:
+    - name: config-volume
+      configMap:
+        name: nginx-np-test-cm
+    - name: secret-volume
+      secret:
+        secretName: nginx-secret
+---
+### kube-system ns
+# kubectl create secret tls nginx-secret -n default --key=artifacts/nginx/nginx.key --cert=artifacts/nginx/nginx.crt
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-np-test-svc
+  namespace: kube-system
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 4430
+      targetPort: 4430
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-np-test-cm
+  namespace: kube-system
+data:
+  nginx.conf: |
+    server {
+      listen       4430 ssl;
+      server_name  localhost;
+
+      ssl_certificate /etc/secret/tls.crt;
+      ssl_certificate_key /etc/secret/tls.key;
+
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+      }
+    }
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-np-test
+  namespace: kube-system
+  labels:
+    app: nginx-np-test
+spec:
+  containers:
+    - name: nginx
+      image: nginx:dev
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d
+        - name: secret-volume
+          mountPath: /etc/secret
+      ports:
+        - containerPort: 4430
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+  volumes:
+    - name: config-volume
+      configMap:
+        name: nginx-np-test-cm
+    - name: secret-volume
+      secret:
+        secretName: nginx-secret

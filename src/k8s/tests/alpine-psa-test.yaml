@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-psa-test
+  namespace: dev
+spec:
+  containers:
+    - name: alpine-psa-test
+      image: alpine:dev
+      command: ["/bin/ash", "-c", "sleep 3600"]
+      securityContext:
+        privileged: true
