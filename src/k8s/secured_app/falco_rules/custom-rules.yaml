@@ -1,6 +1,77 @@
 customRules:
   custom-rules.yaml: |
-    # - rule: Detect Find Command Searching for crt or key files
+
+    - rule: Detect reading of crt or key files
+      desc: Detects attempts to open files with .crt or .key extensions for reading
+      condition: >
+        open_read and (fd.name endswith ".crt" or fd.name endswith ".key") and
+        not proc.name in ("calico-node", "kubelet", "grpc_global_tim", "iptables-legacy", "falcoctl-bin", "curl")
+      output: >
+        Detected read access to a .crt or .key file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath
+      priority: WARNING
+      tags: [security, file_access]
+
+    - rule: Detect editing of crt or key files
+      desc: Detects attempts to open files with .crt or .key extensions for writing
+      condition: >
+        open_write and (fd.name endswith ".crt" or fd.name endswith ".key")
+      output: >
+        Detected write access to a .crt or .key file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+      priority: WARNING
+      tags: [security, file_access]
+
+    - rule: Detect reading of conf or yaml files
+      desc: Detects attempts to open files with .conf or .yaml extensions for reading
+      condition: >
+        open_read and (fd.name endswith ".conf" or fd.name endswith ".yaml") and
+        not proc.name in ("calico-node", "kubelet", "grpc_global_tim", "iptables-legacy", "falcoctl-bin", "curl")
+      output: >
+        Detected read access to a .conf or .yaml file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+      priority: WARNING
+      tags: [security, file_access]
+
+    - rule: Detect editing of conf or yaml files
+      desc: Detects attempts to open files with .conf or .yaml extensions for writing
+      condition: >
+        open_write and (fd.name endswith ".conf" or fd.name endswith ".yaml")
+      output: >
+        Detected write access to a .conf or .yaml file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+      priority: WARNING
+      tags: [security, file_access]
+
+    # DIDN'T USED THESE RULES
+
+    # - rule: Detect reading environment variables
+    #   desc: Detects when an application reads an environment variable named 'env'
+    #   condition: >
+    #     open_read and
+    #     fd.name = "/proc/self/environ"
+    #   output: >
+    #     Detected reading of environment variable 'env' command (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+    #   priority: WARNING
+    #   tags: [security, file_access]
+
+    # - rule: Detect Usage of 'env' command in Shell Commands
+    #   desc: Detects when the 'env' environment variable is used in shell commands
+    #   condition: >
+    #     spawned_process and
+    #     proc.name = "env"
+    #   output: >
+    #     Detected usage of 'env' command (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+    #   priority: WARNING
+    #   tags: [security, command_execution]
+
+    # - rule: Detect nsenter usage for namespace switching
+    #   desc: Detects the use of nsenter to switch namespaces and execute a command
+    #   condition: >
+    #     spawned_process and
+    #     proc.name = "nsenter"
+    #   output: >
+    #     nsenter used to switch namespaces and execute bash (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+    #   priority: CRITICAL
+    #   tags: [security, command_execution]
+
+    # - rule: Detect searching for crt or key files
     #   desc: Detects the use of the find command looking for files with .crt or .key extensions
     #   condition: >
     #     spawned_process and
@@ -11,62 +82,24 @@ customRules:
     #   priority: WARNING
     #   tags: [security, command_execution]
 
-    # - rule: Detect Editing/reading on crt or key files
-    #   desc: Detects attempts to open files with .crt or .key extensions for writing or reading
+    # # Tried to detect delete with rm but Falco doesn't detect it
+    # https://github.com/falcosecurity/falco/issues/274
+    # - rule: Detect deletion of conf or yaml files
+    #   desc: Detects attempts to delete files with .conf or .yaml extensions
     #   condition: >
-    #     (open_write or open_read) and
-    #     (fd.name endswith ".crt" or fd.name endswith ".key")
+    #     (evt.type = unlinkat) and (fd.name endswith ".conf" or fd.name endswith ".yaml")
     #   output: >
-    #     Detected access to a .crt or .key file for editing (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-    #   priority: WARNING
-    #   tags: [security, file_access]
+    #     Detected deletion of a .conf or .yaml file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+    #   priority: CRITICAL
+    #   tags: [security, file_operations]
 
-    - rule: Detect reading environment variables
-      desc: Detects when an application reads an environment variable named 'env'
-      condition: >
-        open_read and
-        fd.name = "/proc/self/environ"
-      output: >
-        Detected reading of environment variable 'env' command (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-      priority: WARNING
-      tags: [security, file_access]
-
-    - rule: Detect Usage of 'env' command in Shell Commands
-      desc: Detects when the 'env' environment variable is used in shell commands
-      condition: >
-        spawned_process and
-        proc.name = "env"
-      output: >
-        Detected usage of 'env' command (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-      priority: WARNING
-      tags: [security, command_execution]
-
-    - rule: Detect nsenter usage for namespace switching
-      desc: Detects the use of nsenter to switch namespaces and execute a command
-      condition: >
-        spawned_process and
-        proc.name = "nsenter"
-      output: >
-        nsenter used to switch namespaces and execute bash (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-      priority: CRITICAL
-      tags: [security, command_execution]
-
-    # - rule: Detect Read/Modification of index.html file
-    #   desc: Detects when the index.html file is modified
+    # # Tried to detect delete with rm but Falco doesn't detect it
+    # https://github.com/falcosecurity/falco/issues/274
+    # - rule: Detect deletion of crt or key files
+    #   desc: Detects attempts to delete files with .crt or .key extensions
     #   condition: >
-    #     (open_write or open_read) and
-    #     fd.name = "/usr/share/nginx/html/index.html"
+    #     (evt.type = unlinkat) and (fd.name endswith ".crt" or fd.name endswith ".key")
     #   output: >
-    #     Detected read/modification of index.html file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-    #   priority: WARNING
-    #   tags: [security, file_access]
-
-    # - rule: Detect Read/Modification of rce_app.py File
-    #   desc: Detects when the rce_app.py file is modified
-    #   condition: >
-    #     (open_write or open_read) and
-    #     fd.name = "/app/rce_app.py"
-    #   output: >
-    #     Detected read/modification of rce_app.py file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
-    #   priority: WARNING
-    #   tags: [security, file_access]
+    #     Detected deletion of a .crt or .key file (file=%fd.name evt_type=%evt.type user=%user.name user_uid=%user.uid user_loginuid=%user.loginuid process=%proc.name proc_exepath=%proc.exepath parent=%proc.pname command=%proc.cmdline terminal=%proc.tty %container.info)
+    #   priority: CRITICAL
+    #   tags: [security, file_operations]
