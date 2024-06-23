@@ -1,4 +1,4 @@
-apiVersion: audit.k8s.io/v1 # This is required.
+apiVersion: audit.k8s.io/v1
 kind: Policy
 # Don't generate audit events for all requests in RequestReceived stage.
 omitStages:
@@ -8,65 +8,67 @@ omitStages:
 rules:
   # Log pod changes at RequestResponse level
   - level: RequestResponse
-    verbs: ["get", "create", "update", "patch", "delete"]
+    verbs: ["get", "list", "create", "delete"]
     resources:
       - group: "" # core API group
-        # Resource "pods" doesn't match requests to any subresource of pods (like /status or /log),
-        # which is consistent with the typical RBAC policy.
         resources: ["pods"]
-    namespaces: ["falco", "dev"]
 
-  # Only check access to resource "pods"
-  # - level: Metadata
-  #   resources:
-  #     - group: ""
-  #       resources: ["pods/log", "pods/status"]
+  # Log Node view at RequestResponse level
+  - level: RequestResponse
+    verbs: ["get", "list"]
+    resources:
+      - group: "" # Core API group
+        resources: ["nodes"]
+
+  # Log service changes at RequestResponse level
+  - level: RequestResponse
+    verbs: ["get", "list", "create", "delete"]
+    resources:
+      - group: ""
+        resources: ["services"]
 
   # Log configmap and secret changes at the Metadata level.
   - level: Metadata
-    verbs: ["get", "create", "update", "patch", "delete"]
+    verbs: ["get", "list", "create", "delete"]
     resources:
       - group: ""
         resources: ["secrets", "configmaps"]
-    namespaces: ["falco", "dev"]
 
   # Log role and rolebinding changes at RequestResponse level
   - level: RequestResponse
-    verbs: ["get", "create", "update", "patch", "delete"]
+    verbs: ["get", "list", "create", "delete"]
     resources:
       - group: "rbac.authorization.k8s.io"
         resources:
           ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
-    namespaces: ["falco", "dev"]
 
   # Log serviceaccount changes at RequestResponse level
   - level: RequestResponse
-    verbs: ["get", "create", "update", "patch", "delete"]
+    verbs: ["get", "list", "create", "delete"]
     resources:
       - group: ""
         resources: ["serviceaccounts"]
-    namespaces: ["falco", "dev"]
+
+  # Log namespace changes at Metadata level
+  - level: Metadata
+    resources:
+      - group: ""
+        resources: ["namespaces"]
 
   # Log NetworkPolicy changes at RequestResponse level
   - level: RequestResponse
-    verbs: ["get", "create", "update", "patch", "delete"]
+    verbs: ["get", "list", "create", "delete"]
     resources:
       - group: "networking.k8s.io"
         resources: ["networkpolicies"]
-    namespaces: ["falco", "dev"]
-
-  # TODO: Add watching actions of user
-
-  # # Log all actions performed by system:admin and other system users
-  # - level: RequestResponse
-  #   users: ["system:admin", "system:serviceaccount:kube-system:default"]
+    namespaces: ["dev"]
 
   ### DON'T WATCH RULES
 
   # Log the request body of configmap changes in kube-system.
   - level: None
     resources:
-      - group: "" # core API group
+      - group: ""
         resources: ["configmaps"]
     # This rule only applies to resources in the "kube-system" namespace.
     # The empty string "" can be used to select non-namespaced resources.
@@ -83,7 +85,7 @@ rules:
     users: ["system:kube-proxy"]
     verbs: ["watch"]
     resources:
-      - group: "" # core API group
+      - group: ""
         resources: ["endpoints", "services"]
 
   # Don't log authenticated requests to certain non-resource URL paths.
