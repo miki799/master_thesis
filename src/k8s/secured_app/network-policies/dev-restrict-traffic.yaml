@@ -2,10 +2,10 @@
 # So what is not specified here will by denied (e.g. from inside Pods we cannot send requests to the API server)
 # Following NetworkPolicy concerns dev namespace and allows:
 
-# alpine-dev <-> nginx
-# alpine-dev and nginx -> DNS
+# alpine-dev -> nginx
+# nginx <- alpine-dev
+# alpine-dev -> CoreDNS
 # vuln-app - only external access through NodePort
-# other pods - no comm
 
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -15,6 +15,7 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
+    # unknown pods are isolated for ingress and egress connectivity
     - Ingress
     - Egress
 ---
@@ -29,7 +30,7 @@ spec:
       app: nginx
   policyTypes:
     - Ingress
-    - Egress # only for DNS
+    - Egress # isolated for egress connectivity
   ingress:
     - from:
         - podSelector:
@@ -38,16 +39,6 @@ spec:
       ports:
         - protocol: TCP
           port: 4430
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-      ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -59,9 +50,8 @@ spec:
     matchLabels:
       app: alpine-dev
   policyTypes:
-    - Ingress
-    - Egress # only for DNS
-  ingress: [] # TODO: FIX
+    - Ingress # isolated for ingress connectivity
+    - Egress
   egress:
     - to:
         - podSelector:
@@ -95,13 +85,15 @@ spec:
     - Ingress
     - Egress
   ingress:
+    # allows incoming traffic from every IP address on port 6000
     - from:
         - ipBlock:
-            cidr: 0.0.0.0/0 # allows incoming traffic from every IP address
+            cidr: 0.0.0.0/0
       ports:
         - protocol: TCP
           port: 6000 # vuln-app port
   egress:
+    # allows outgoing traffic to every IP address
     - to:
         - ipBlock:
-            cidr: 0.0.0.0/0 # allows outgoing traffic to every IP address
+            cidr: 0.0.0.0/0

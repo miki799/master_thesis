@@ -19,7 +19,7 @@ spec:
   volumes:
     - name: secret-volume
       secret:
-        secretName: nginx-secret
+        secretName: ca-secret
         items:
-          - key: tls.crt
-            path: tls.crt
+          - key: cert
+            path: ca.crt

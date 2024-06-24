@@ -4,6 +4,7 @@ FROM ${IMAGE_NAME_WITH_TAG}
 
 # Install curl:8.5.0-r0
 RUN apk update; \
+    apk add --no-cache busybox-extras; \
     apk add --no-cache curl=8.5.0-r0; \
     curl --version
 

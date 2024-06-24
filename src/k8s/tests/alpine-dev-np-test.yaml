@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: alpine-dev-np-test-svc
+  namespace: dev
+spec:
+  selector:
+    app: alpine-dev
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-dev-np-test
+  namespace: dev
+  labels:
+    app: alpine-dev
+spec:
+  serviceAccountName: default
+  securityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: alpine-dev
+      image: alpine:dev
+      ports:
+        - containerPort: 8080
+      securityContext:
+        runAsUser: 11111
+        runAsGroup: 11111
+        runAsNonRoot: true
+        privileged: false
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop:
+            - ALL
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+        requests:
+          memory: "100Mi"
+          cpu: "450m"
+      volumeMounts:
+        - name: secret-volume
+          mountPath: /etc/secret
+          readOnly: true
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: ca-secret
+        items:
+          - key: cert
+            path: ca.crt
