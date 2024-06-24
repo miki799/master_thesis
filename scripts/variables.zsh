@@ -33,7 +33,8 @@ NGINX_UNPRIVILEGED="nginx:dev_unprivileged"
 NGINX_UNPRIVILEGED_BASE_IMAGE="nginxinc/nginx-unprivileged:1.26.1-alpine"
 
 ## Tools
-KUBESEC="kubesec/kubesec:512c5e0"
+KUBESEC="kubesec:alpine"
+KUBESEC_BASE_IMAGE="alpine:3.19.1"
 
 # Kubernetes
 K8S_DIR="$ROOT_DIR/src/k8s"

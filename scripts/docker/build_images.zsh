@@ -2,7 +2,7 @@
 
 source scripts/variables.zsh
 
-echo "Building Docker images..."
+echo "Building Application Docker images..."
 
 cd $DOCKER_DIR/alpine-dev && \
 docker build --build-arg IMAGE_NAME_WITH_TAG=$ALPINE_DEV_BASE_IMAGE -t $ALPINE_DEV .
@@ -16,9 +16,9 @@ docker build --build-arg IMAGE_NAME_WITH_TAG=$NGINX_UNPRIVILEGED_BASE_IMAGE -t $
 cd $DOCKER_DIR/vuln-app && \
 docker build --build-arg IMAGE_NAME_WITH_TAG=$VULN_APP_BASE_IMAGE -t $VULN_APP .
 
-echo "Finished building Docker images!"
+echo "Finished building Application Docker images!"
 
-echo "Loading Docker images to the kind cluster..."
+echo "Loading Docker images to the Kind cluster..."
 
 if kubectl get node $CP_NODE_NAME &> /dev/null; then
     kind load docker-image $VULN_APP $ALPINE_DEV $NGINX_UNPRIVILEGED $NGINX --name $CLUSTER_NAME
@@ -26,3 +26,10 @@ if kubectl get node $CP_NODE_NAME &> /dev/null; then
 else
     echo "$CP_NODE_NAME node does not exist!"
 fi
+
+echo "Building tools Docker images..."
+
+cd $DOCKER_DIR/kubesec && \
+docker build --build-arg IMAGE_NAME_WITH_TAG=$KUBESEC_BASE_IMAGE --build-arg KUBESEC_VERSION=$KUBESEC_VERSION -t $KUBESEC .
+
+echo "Finished tools Docker images!"
