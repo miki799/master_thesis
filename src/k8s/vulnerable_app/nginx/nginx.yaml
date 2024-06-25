@@ -50,10 +50,6 @@ spec:
           mountPath: /etc/secret
       ports:
         - containerPort: 4430
-      resources:
-        limits:
-          memory: "128Mi"
-          cpu: "500m"
   volumes:
     - name: config-volume
       configMap:

@@ -20,15 +20,8 @@ metadata:
   labels:
     app: vuln-app
 spec:
-  # serviceAccountName: create-pods-dev-sa
-  # serviceAccountName: node-viewer-sa
-  # serviceAccountName: create-pods-cluster-sa
   containers:
     - name: vuln-app
       image: vuln_app:1.0
-      resources:
-        limits:
-          memory: "128Mi"
-          cpu: "500m"
       ports:
         - containerPort: 6000

@@ -9,10 +9,6 @@ spec:
   containers:
     - name: alpine-dev
       image: alpine:dev
-      resources:
-        limits:
-          memory: "128Mi"
-          cpu: "500m"
       volumeMounts:
         - name: secret-volume
           mountPath: /etc/secret

@@ -21,6 +21,7 @@ metadata:
     app: vuln-app
 spec:
   serviceAccountName: default
+  automountServiceAccountToken: false
   securityContext:
     seccompProfile:
       type: RuntimeDefault

@@ -41,6 +41,7 @@ metadata:
     app: nginx
 spec:
   serviceAccountName: default
+  automountServiceAccountToken: false
   securityContext:
     seccompProfile:
       type: RuntimeDefault

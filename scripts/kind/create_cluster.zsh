@@ -32,6 +32,8 @@ else
     exit 1
 fi
 
+mkdir artifacts
+
 # Create cluster
 
 echo "Creating cluster from $KIND_CONFIG_DIR/$SELECTED_CONFIG"
