@@ -6,3 +6,5 @@ COPY index.html /usr/share/nginx/html/index.html
 
 # Start nginx
 CMD [ "nginx", "-g", "daemon off;" ]
+
+LABEL owner=mikolajtelec

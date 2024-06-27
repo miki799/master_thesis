@@ -18,7 +18,7 @@ create_certificates_and_secrets() {
     mkdir -p $APP_CA_DIR
     mkdir -p $NGINX_DIR
 
-    # Create App CA and Secret called ca-secret
+    # Create App CA and k8s Secret called ca-secret
 
     openssl genrsa -out $APP_CA_DIR/ca.key 2048
 
@@ -26,7 +26,7 @@ create_certificates_and_secrets() {
 
     kubectl create secret generic ca-secret -n $DEV_NAMESPACE --from-file=cert=$APP_CA_DIR/ca.crt
 
-    ## Create nginx certificate, private key and Secret called nginx-secret
+    ## Create nginx certificate, private key and k8s Secret called nginx-secret
 
     openssl genrsa -out $NGINX_DIR/nginx.key 2048
 
