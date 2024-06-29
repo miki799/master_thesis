@@ -71,7 +71,6 @@ spec:
           port: 53
 ---
 # vuln-app can be accessed from outside the cluster on port 6000
-# vuln-app can send data to any external destination outside cluster
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -83,7 +82,7 @@ spec:
       app: vuln-app
   policyTypes:
     - Ingress
-    - Egress
+    - Egress # isolated for egress connectivity
   ingress:
     # allows incoming traffic from every IP address on port 6000
     - from:
@@ -92,8 +91,3 @@ spec:
       ports:
         - protocol: TCP
           port: 6000 # vuln-app port
-  egress:
-    # allows outgoing traffic to every IP address
-    - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
