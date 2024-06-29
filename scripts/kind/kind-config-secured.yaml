@@ -2,12 +2,6 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
-    # exposes API server on port 6443, normally it is exposed by Kind on random port to avoid colissions
-    extraPortMappings:
-      - containerPort: 6443
-        hostPort: 6443
-        listenAddress: "127.0.0.1"
-        protocol: TCP
     kubeadmConfigPatches:
       - |
         apiVersion: kubeadm.k8s.io/v1beta3
@@ -17,8 +11,6 @@ nodes:
             audit-log-path: /var/log/kubernetes/kube-apiserver-audit.log
             audit-policy-file: /etc/kubernetes/policies/audit-policy.yaml
             admission-control-config-file: /etc/kubernetes/psa-config/psa.yaml
-            encryption-provider-config: /etc/kubernetes/enc/encryption-configuration.yaml
-          # mount new files / directories on the control plane
           extraVolumes:
             - name: audit-policies
               hostPath: /etc/kubernetes/policies
@@ -35,25 +27,22 @@ nodes:
               mountPath: /etc/kubernetes/psa-config
               readOnly: true
               pathType: DirectoryOrCreate
-            - name: enc-config
-              hostPath: /etc/kubernetes/enc
-              mountPath: /etc/kubernetes/enc
-              readOnly: true
-              pathType: DirectoryOrCreate
-    # mount the local files on the control plane
+    # mount the local files on the control plane container node
     extraMounts:
       - hostPath: ./src/k8s/secured_app/audit-policy/audit-policy.yaml
         containerPath: /etc/kubernetes/policies/audit-policy.yaml
         readOnly: true
-        propagation: None # changes on the host system won't be propagated to the container
+        propagation: None
       - hostPath: ./src/k8s/secured_app/pod-security-admission/psa.yaml
         containerPath: /etc/kubernetes/psa-config/psa.yaml
         readOnly: true
         propagation: None
-      - hostPath: ./src/k8s/secured_app/api-server/encryption-configuration.yaml
-        containerPath: /etc/kubernetes/enc/encryption-configuration.yaml
-        readOnly: true
-        propagation: None
+    # exposes API server on port 6443, normally it is exposed by Kind on random port
+    extraPortMappings:
+      - containerPort: 6443
+        hostPort: 6443
+        listenAddress: "127.0.0.1"
+        protocol: TCP
   - role: worker
     extraPortMappings:
       - containerPort: 30007
@@ -61,5 +50,4 @@ nodes:
         listenAddress: "127.0.0.1"
         protocol: TCP
 networking:
-  # disables kindnet CNI which doesn't support NetworkPolicies
   disableDefaultCNI: true

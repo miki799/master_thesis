@@ -15,6 +15,7 @@ RUN mkdir kubesec ; \
     kubesec version ; \
     rm -rf kubesec_linux_amd64.tar.gz kubesec
 
+# Run shell
 CMD ["/bin/sh"]
 
 LABEL owner=mikolajtelec
