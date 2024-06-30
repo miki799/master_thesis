@@ -1,40 +1,40 @@
 apiVersion: audit.k8s.io/v1
 kind: Policy
-# Don't generate audit events for all requests in RequestReceived stage.
 omitStages:
+  # Don't generate audit events for following stages
   - "RequestReceived"
   - "ResponseStarted"
   - "Panic"
 rules:
-  # Log pod changes at RequestResponse level
-  - level: RequestResponse
-    verbs: ["get", "list", "create", "delete"]
-    resources:
-      - group: "" # core API group
-        resources: ["pods"]
-
-  # Log Node view at RequestResponse level
-  - level: RequestResponse
-    verbs: ["get", "list"]
-    resources:
-      - group: "" # Core API group
-        resources: ["nodes"]
-
-  # Log service changes at RequestResponse level
+  # Log operations on Pods at RequestResponse level
   - level: RequestResponse
     verbs: ["get", "list", "create", "delete"]
     resources:
       - group: ""
-        resources: ["services"]
+        resources: ["pods"]
 
-  # Log configmap and secret changes at the Metadata level.
+  # Log operations on Nodes at RequestResponse level
+  - level: RequestResponse
+    verbs: ["get", "list"]
+    resources:
+      - group: ""
+        resources: ["nodes"]
+
+  # Log operations on ConfigMaps and Secrets at the Metadata level.
   - level: Metadata
     verbs: ["get", "list", "create", "delete"]
     resources:
       - group: ""
         resources: ["secrets", "configmaps"]
 
-  # Log role and rolebinding changes at RequestResponse level
+  # Log operations on Namespaces at Metadata level
+  - level: Metadata
+    resources:
+      - group: ""
+        resources: ["namespaces"]
+
+  # Log operations on Roles, RoleBindings, ClusterRoles and
+  # ClusterRoleBindings at RequestResponse level
   - level: RequestResponse
     verbs: ["get", "list", "create", "delete"]
     resources:
@@ -42,20 +42,23 @@ rules:
         resources:
           ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
 
-  # Log serviceaccount changes at RequestResponse level
+  ## Not used
+
+  # Log operations on Services at RequestResponse level
+  - level: RequestResponse
+    verbs: ["get", "list", "create", "delete"]
+    resources:
+      - group: ""
+        resources: ["services"]
+
+  # Log operations on ServiceAccounts at RequestResponse level
   - level: RequestResponse
     verbs: ["get", "list", "create", "delete"]
     resources:
       - group: ""
         resources: ["serviceaccounts"]
 
-  # Log namespace changes at Metadata level
-  - level: Metadata
-    resources:
-      - group: ""
-        resources: ["namespaces"]
-
-  # Log NetworkPolicy changes at RequestResponse level
+  # Log operations on NetworkPolicy changes at RequestResponse level
   - level: RequestResponse
     verbs: ["get", "list", "create", "delete"]
     resources:
@@ -63,9 +66,9 @@ rules:
         resources: ["networkpolicies"]
     namespaces: ["dev"]
 
-  ### DON'T WATCH RULES
+  ## DON'T WATCH RULES
 
-  # Log the request body of configmap changes in kube-system.
+  # Don't log the request body of configmap changes in kube-system.
   - level: None
     resources:
       - group: ""
@@ -74,7 +77,7 @@ rules:
     # The empty string "" can be used to select non-namespaced resources.
     namespaces: ["kube-system"]
 
-  # Log node changes at RequestResponse level
+  # Don't log node changes
   - level: None
     resources:
       - group: ""
