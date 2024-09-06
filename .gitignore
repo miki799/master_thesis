@@ -6,7 +6,5 @@
 # Artifacts
 artifacts/*
 
-# Azure scripts
-scripts/azure
-
+# vscode config
 .vscode

@@ -11,6 +11,7 @@ echo "Security risk analysis for K8s resources..."
 
 mkdir -p $NEW_LOGS_DIR
 
+# Run container with kubesec
 docker run --name $CONTAINER_NAME -dit $KUBESEC /bin/sh
 
 # Secured pods
@@ -33,6 +34,7 @@ docker exec $CONTAINER_NAME kubesec scan alpine-dev.yaml > $NEW_LOGS_DIR/alpine-
 docker exec $CONTAINER_NAME kubesec scan nginx.yaml > $NEW_LOGS_DIR/nginx_vulnerable.logs
 docker exec $CONTAINER_NAME kubesec scan vuln-app.yaml > $NEW_LOGS_DIR/vuln-app_vulnerable.logs
 
+# Delete not needed container
 docker rm -f $CONTAINER_NAME
 
 echo "Analysis finished!"

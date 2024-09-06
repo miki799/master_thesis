@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+### Fill with proper data
 CA_CERT=$(cat ./artifacts/attacker_stuff/ca.crt)
 USER_CERT=$(cat ./artifacts/attacker_stuff/impostor.crt)
 USER_KEY=$(cat ./artifacts/attacker_stuff/impostor.key)
@@ -10,6 +11,7 @@ K8S_PORT=6443
 CLUSTER=target-cluster
 CONTEXT=impostor-context
 K8S_USER=impostor
+###
 
 ENCODED_CA_CERT=$(echo $CA_CERT | base64)
 ENCODED_USER_CERT=$(echo $USER_CERT | base64)

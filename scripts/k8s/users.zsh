@@ -2,8 +2,11 @@
 
 source scripts/variables.zsh
 
-USERNAMES=("developer") # add username
-GROUPS=("devs") # add group name
+# Fill arrays with usernames and groups
+## ["user1", "user2"]
+USERNAMES=("developer")
+## ["user1_group", "user2_group"]
+GROUPS=("devs")
 
 create_user() {
   local username=$1

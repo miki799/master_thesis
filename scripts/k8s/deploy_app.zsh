@@ -74,34 +74,12 @@ deploy_secured_app() {
     ### devs group
     kubectl apply -f $K8S_SEC_DIR/rbac/devs-role.yaml
 
-    ### pod-viewers group
-    # kubectl apply -f $K8S_SEC_DIR/rbac/pod-viewers-role.yaml
-
     ### default SA
     kubectl apply -f $K8S_SEC_DIR/rbac/default-sa.yaml
 
-    ## 3 Create ca certificate and ca-secret secret
+    ## 3 Create ca and secrets
 
-    mkdir -p $APP_CA_DIR
-    mkdir -p $NGINX_DIR
-
-    openssl genrsa -out $APP_CA_DIR/ca.key 2048
-
-    openssl req -x509 -new -nodes -key $APP_CA_DIR/ca.key -sha256 -days 365 -out $APP_CA_DIR/ca.crt -subj "/C=PL/ST=MPL/L=KRK/O=PK/CN=TelecCA"
-
-    kubectl create secret generic ca-secret -n $DEV_NAMESPACE --from-file=cert=$APP_CA_DIR/ca.crt
-
-    ## 4 Create nginx certificate and nginx-secret
-
-    openssl genrsa -out $NGINX_DIR/nginx.key 2048
-
-    openssl req -new -key $NGINX_DIR/nginx.key -out $NGINX_DIR/nginx.csr \
-    -subj "/CN=nginx-svc.dev.svc.cluster.local" \
-    -addext "subjectAltName=DNS:localhost,DNS:nginx-svc.dev.svc.cluster.local"
-
-    openssl x509 -req -in $NGINX_DIR/nginx.csr -CA $APP_CA_DIR/ca.crt -CAkey $APP_CA_DIR/ca.key -out $NGINX_DIR/nginx.crt -days 365 -sha256
-
-    kubectl create secret tls nginx-secret -n $DEV_NAMESPACE --key=$NGINX_DIR/nginx.key --cert=$NGINX_DIR/nginx.crt
+    create_certificates_and_secrets
 
     ## 5 Deploy nginx (ClusterIP, ConfigMap and Pod)
 
@@ -118,7 +96,7 @@ deploy_secured_app() {
     ## 8 Deploy NetworkPolicy resources
 
     kubectl apply -f $K8S_SEC_DIR/network-policies/dev-restrict-traffic.yaml
-    kubectl apply -f $K8S_SEC_DIR/network-policies/default-deny-traffic.yaml
+    kubectl apply -f $K8S_SEC_DIR/network-policies/default-deny-all.yaml
 
     ## 9 Deploy Falco
 
